@@ -8,8 +8,6 @@ import {
   FaUsers,
   FaMoneyBillWave,
   FaCalendarCheck,
-  FaBuilding,
-  FaUserTie,
 } from "react-icons/fa";
 
 import "./Dashboard.css";
@@ -21,17 +19,23 @@ function Dashboard() {
 
 
   // =====================================================
-  // FETCH PROCEDURES FROM BACKEND
+  // FETCH PROCEDURES FROM PRODUCTION BACKEND
   // =====================================================
 
   useEffect(() => {
 
-    fetch("http://localhost:5000/api/procedures")
+    fetch(
+      "https://seyal-chits-backend.onrender.com/api/procedures"
+    )
 
       .then((response) => {
 
         if (!response.ok) {
-          throw new Error("Failed to fetch procedures");
+
+          throw new Error(
+            "Failed to fetch procedures"
+          );
+
         }
 
         return response.json();
@@ -41,7 +45,9 @@ function Dashboard() {
       .then((result) => {
 
         if (result.success) {
+
           setProcedures(result.data);
+
         }
 
       })
@@ -62,31 +68,45 @@ function Dashboard() {
   // DASHBOARD CALCULATIONS
   // =====================================================
 
-  const totalProcedures = procedures.length;
+  const totalProcedures =
+    procedures.length;
 
 
-  const totalCustomers = new Set(
-    procedures.map(
-      (item) => item.customerName
-    )
-  ).size;
+  const totalCustomers =
+    new Set(
+      procedures.map(
+        (item) =>
+          item.customerName
+      )
+    ).size;
 
 
-  const totalChitValue = procedures.reduce(
-    (total, item) =>
-      total + Number(item.chitValue || 0),
-    0
-  );
+  const totalChitValue =
+    procedures.reduce(
+      (total, item) =>
+        total +
+        Number(
+          item.chitValue || 0
+        ),
+      0
+    );
 
 
-  const today =
-    new Date().toISOString().split("T")[0];
+  // =====================================================
+  // TODAY'S DUE
+  // Due Day = current day of month
+  // =====================================================
+
+  const currentDay =
+    new Date().getDate();
 
 
-  const todaysDue = procedures.filter(
-    (item) =>
-      item.dueDate === today
-  ).length;
+  const todaysDue =
+    procedures.filter(
+      (item) =>
+        Number(item.dueDay) ===
+        currentDay
+    ).length;
 
 
   // =====================================================
@@ -122,6 +142,7 @@ function Dashboard() {
         </div>
 
 
+
         {/* NAVIGATION */}
 
         <nav className="sidebar-menu">
@@ -147,6 +168,7 @@ function Dashboard() {
           </NavLink>
 
 
+
           {/* PROCEDURE */}
 
           <NavLink
@@ -165,6 +187,7 @@ function Dashboard() {
             </span>
 
           </NavLink>
+
 
 
           {/* REPORTS */}
@@ -188,6 +211,7 @@ function Dashboard() {
 
 
         </nav>
+
 
 
         {/* SIDEBAR FOOTER */}
@@ -257,7 +281,6 @@ function Dashboard() {
 
         <section className="welcome-card">
 
-
           <div>
 
             <span className="welcome-small">
@@ -282,7 +305,6 @@ function Dashboard() {
 
           </div>
 
-
         </section>
 
 
@@ -303,6 +325,7 @@ function Dashboard() {
               <FaClipboardList />
 
             </div>
+
 
             <div>
 
@@ -330,6 +353,7 @@ function Dashboard() {
 
             </div>
 
+
             <div>
 
               <span>
@@ -356,6 +380,7 @@ function Dashboard() {
 
             </div>
 
+
             <div>
 
               <span>
@@ -363,9 +388,13 @@ function Dashboard() {
               </span>
 
               <h2>
-                ₹ {totalChitValue.toLocaleString(
+
+                ₹{" "}
+
+                {totalChitValue.toLocaleString(
                   "en-IN"
                 )}
+
               </h2>
 
             </div>
@@ -383,6 +412,7 @@ function Dashboard() {
               <FaCalendarCheck />
 
             </div>
+
 
             <div>
 
@@ -412,15 +442,20 @@ function Dashboard() {
 
           <div className="section-heading">
 
-            <h2>
-              Quick Actions
-            </h2>
+            <div>
 
-            <p>
-              Frequently used options
-            </p>
+              <h2>
+                Quick Actions
+              </h2>
+
+              <p>
+                Frequently used options
+              </p>
+
+            </div>
 
           </div>
+
 
 
           <div className="quick-actions">
@@ -500,22 +535,25 @@ function Dashboard() {
 
           <div className="section-heading">
 
-            <h2>
-              Recent Procedures
-            </h2>
+            <div>
 
-            <p>
-              Latest procedure entries
-            </p>
+              <h2>
+                Recent Procedures
+              </h2>
+
+              <p>
+                Latest procedure entries
+              </p>
+
+            </div>
 
           </div>
 
 
+
           {recentProcedures.length === 0 ? (
 
-
             <div className="empty-box">
-
 
               <div className="empty-icon">
 
@@ -534,12 +572,9 @@ function Dashboard() {
                 will appear here.
               </p>
 
-
             </div>
 
-
           ) : (
-
 
             <div className="recent-table-wrapper">
 
@@ -570,7 +605,7 @@ function Dashboard() {
                     </th>
 
                     <th>
-                      Due Date
+                      Due Day
                     </th>
 
                   </tr>
@@ -583,7 +618,12 @@ function Dashboard() {
                   {recentProcedures.map(
                     (item, index) => (
 
-                      <tr key={item.id}>
+                      <tr
+                        key={
+                          item.id ||
+                          index
+                        }
+                      >
 
                         <td>
                           {index + 1}
@@ -602,16 +642,19 @@ function Dashboard() {
                         </td>
 
                         <td>
+
                           ₹{" "}
+
                           {Number(
-                            item.chitValue
+                            item.chitValue || 0
                           ).toLocaleString(
                             "en-IN"
                           )}
+
                         </td>
 
                         <td>
-                          {item.dueDate}
+                          {item.dueDay}
                         </td>
 
                       </tr>
@@ -625,7 +668,6 @@ function Dashboard() {
 
             </div>
 
-
           )}
 
 
@@ -637,6 +679,7 @@ function Dashboard() {
     </div>
 
   );
+
 }
 
 

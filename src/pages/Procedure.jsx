@@ -17,7 +17,6 @@ import {
 
 import "./Procedure.css";
 
-
 function Procedure() {
 
   // =====================================================
@@ -90,7 +89,7 @@ function Procedure() {
     try {
 
       const response = await fetch(
-        "http://localhost:5000/api/procedures",
+        "https://seyal-chits-backend.onrender.com/api/procedures",
         {
           method: "POST",
 
@@ -123,7 +122,6 @@ function Procedure() {
 
 
       handleReset();
-
 
     } catch (error) {
 
@@ -441,26 +439,22 @@ function Procedure() {
                   In My Home Town
                 </option>
 
-               < option value="Delivery at correct time">
+                <option value="Delivery at correct time">
                   Delivery at correct time
                 </option>
-                
+
                 <option value="Fixed Chit">
                   Fixed Chit
                 </option>
-                
+
                 <option value="Certified Company">
                   Certified Company
                 </option>
 
-                <option value="Fixed Chit">
-                  Fixed Chit
-                </option>
-
-
                 <option value="Security for Money">
                   Security for Money
                 </option>
+
               </select>
 
             </div>
@@ -522,9 +516,7 @@ function Procedure() {
           <div className="form-grid">
 
 
-            {/* =================================================
-                DUE DAY
-            ================================================= */}
+            {/* DUE DAY */}
 
             <div className="form-group">
 
@@ -704,8 +696,6 @@ function Procedure() {
           <div className="form-actions">
 
 
-            {/* CLEAR */}
-
             <button
               type="button"
               className="reset-button"
@@ -718,9 +708,6 @@ function Procedure() {
 
             </button>
 
-
-
-            {/* SAVE */}
 
             <button
               type="submit"
@@ -746,6 +733,5 @@ function Procedure() {
   );
 
 }
-
 
 export default Procedure;
