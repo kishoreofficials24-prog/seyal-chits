@@ -648,6 +648,13 @@ function Procedure() {
                   ₹5,00,000
                 </option>
 
+                <option value="1000000">
+                  ₹10,00,000
+                </option>
+
+         <option value="2git add src/pages/Procedure.jsx src/pages/Reports.jsx000000">
+                  ₹20,00,000
+                </option>  
               </select>
 
             </div>
