@@ -521,22 +521,47 @@ function Procedure() {
                   Select Staff
                 </option>
 
-                <option value="Kishore">
-                  Kishore
-                </option>
-
                 <option value="Thiyagarajan">
                   Thiyagarajan
                 </option>
 
-                <option value="Renuga">
-                  Renuga
+                <option value="Renugadevi">
+                  Renugadevi
                 </option>
 
                 <option value="Prathap">
                   Prathap
                 </option>
 
+                <option value="Venkateshan">
+                  Venkateshan
+                </option>
+
+             <option value="Uma Devi">
+                  Uma Devi
+                </option>
+
+            <option value="Rathinam">
+                  Rathinam
+                </option>
+
+           <option value="Bharani">
+                  Bharani
+                </option>
+                
+                 <option value="Rani">
+                  Rani
+                </option>
+
+                 <option value="Loganayaki">
+                  Loganayaki
+                </option>
+                
+                 <option value="Chandralekha">
+                  Chandralekha
+                </option>
+                
+                
               </select>
 
             </div>

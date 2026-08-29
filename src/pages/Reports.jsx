@@ -9,6 +9,7 @@ import {
   FaSearch,
   FaTimes,
   FaClipboardList,
+  FaPrint,
 } from "react-icons/fa";
 
 import "./Reports.css";
@@ -204,6 +205,514 @@ function Reports() {
   });
 
 
+  // =====================================================
+  // PRINT REPORT
+  // =====================================================
+
+  const handlePrint = () => {
+
+    if (filteredData.length === 0) {
+
+      alert(
+        "No records available to print."
+      );
+
+      return;
+
+    }
+
+
+    const printWindow =
+      window.open(
+        "",
+        "_blank",
+        "width=1200,height=800"
+      );
+
+
+    if (!printWindow) {
+
+      alert(
+        "Please allow pop-ups to print the report."
+      );
+
+      return;
+
+    }
+
+
+    const today =
+      new Date().toLocaleDateString(
+        "en-IN"
+      );
+
+
+    // ===================================================
+    // FILTER SUMMARY
+    // ===================================================
+
+    const branchText =
+      appliedFilters.branch ||
+      "All Branches";
+
+    const staffText =
+      appliedFilters.staff ||
+      "All Staff";
+
+    const dueDayText =
+      appliedFilters.dueDay ||
+      "All Due Days";
+
+    const chitValueText =
+      appliedFilters.chitValue
+        ? `₹${Number(
+            appliedFilters.chitValue
+          ).toLocaleString("en-IN")}`
+        : "All Chit Values";
+
+
+    // ===================================================
+    // TABLE ROWS
+    // ===================================================
+
+    const tableRows =
+      filteredData
+        .map(
+          (item, index) => `
+            <tr>
+
+              <td>${index + 1}</td>
+
+              <td>
+                ${item.branch || "-"}
+              </td>
+
+              <td>
+                ${item.staffName || "-"}
+              </td>
+
+              <td>
+                ${item.customerName || "-"}
+              </td>
+
+              <td>
+                ₹${Number(
+                  item.chitValue || 0
+                ).toLocaleString("en-IN")}
+              </td>
+
+              <td>
+                ${item.keyLever || "-"}
+              </td>
+
+              <td>
+                ${item.followUp ?? "-"}
+              </td>
+
+              <td>
+                ${item.dueDay || "-"}
+              </td>
+
+              <td>
+                ${item.payMode || "-"}
+              </td>
+
+              <td>
+                ${item.collectionType || "-"}
+              </td>
+
+              <td>
+                ${item.remarks || "-"}
+              </td>
+
+            </tr>
+          `
+        )
+        .join("");
+
+
+    // ===================================================
+    // PRINT HTML
+    // ===================================================
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+
+      <html>
+
+      <head>
+
+        <title>
+          SEYAL CHITS - Procedure Report
+        </title>
+
+
+        <style>
+
+          * {
+            box-sizing: border-box;
+          }
+
+
+          body {
+
+            font-family:
+              Arial,
+              Helvetica,
+              sans-serif;
+
+            margin: 0;
+
+            padding: 25px;
+
+            color: #222;
+
+            background: #fff;
+
+          }
+
+
+          .report-header {
+
+            text-align: center;
+
+            margin-bottom: 20px;
+
+            border-bottom:
+              2px solid #222;
+
+            padding-bottom: 15px;
+
+          }
+
+
+          .report-header h1 {
+
+            margin: 0;
+
+            font-size: 24px;
+
+            font-weight: 700;
+
+          }
+
+
+          .report-header h2 {
+
+            margin: 5px 0 0;
+
+            font-size: 17px;
+
+            font-weight: 600;
+
+          }
+
+
+          .report-date {
+
+            margin-top: 7px;
+
+            font-size: 13px;
+
+            color: #555;
+
+          }
+
+
+          .filter-summary {
+
+            display: grid;
+
+            grid-template-columns:
+              repeat(4, 1fr);
+
+            gap: 10px;
+
+            margin-bottom: 18px;
+
+          }
+
+
+          .filter-box {
+
+            border:
+              1px solid #ccc;
+
+            padding: 8px 10px;
+
+            border-radius: 4px;
+
+            font-size: 12px;
+
+          }
+
+
+          .filter-box strong {
+
+            display: block;
+
+            margin-bottom: 3px;
+
+            font-size: 11px;
+
+            color: #555;
+
+          }
+
+
+          .record-count {
+
+            margin-bottom: 10px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+          }
+
+
+          table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            font-size: 10px;
+
+          }
+
+
+          th {
+
+            background: #f1f1f1;
+
+            font-weight: 700;
+
+            text-align: left;
+
+          }
+
+
+          th,
+          td {
+
+            border:
+              1px solid #999;
+
+            padding: 7px 5px;
+
+            vertical-align: top;
+
+          }
+
+
+          .footer {
+
+            margin-top: 20px;
+
+            text-align: right;
+
+            font-size: 11px;
+
+            color: #666;
+
+          }
+
+
+          @page {
+
+            size: landscape;
+
+            margin: 10mm;
+
+          }
+
+
+          @media print {
+
+            body {
+
+              padding: 0;
+
+            }
+
+          }
+
+        </style>
+
+      </head>
+
+
+      <body>
+
+
+        <div class="report-header">
+
+          <h1>
+            SEYAL CHITS
+          </h1>
+
+          <h2>
+            Procedure Report
+          </h2>
+
+          <div class="report-date">
+            Report Date: ${today}
+          </div>
+
+        </div>
+
+
+        <div class="filter-summary">
+
+          <div class="filter-box">
+
+            <strong>
+              BRANCH
+            </strong>
+
+            ${branchText}
+
+          </div>
+
+
+          <div class="filter-box">
+
+            <strong>
+              STAFF
+            </strong>
+
+            ${staffText}
+
+          </div>
+
+
+          <div class="filter-box">
+
+            <strong>
+              DUE DAY
+            </strong>
+
+            ${dueDayText}
+
+          </div>
+
+
+          <div class="filter-box">
+
+            <strong>
+              CHIT VALUE
+            </strong>
+
+            ${chitValueText}
+
+          </div>
+
+        </div>
+
+
+        <div class="record-count">
+
+          Total Records:
+          ${filteredData.length}
+
+        </div>
+
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                S.No
+              </th>
+
+              <th>
+                Branch
+              </th>
+
+              <th>
+                Staff Name
+              </th>
+
+              <th>
+                Customer Name
+              </th>
+
+              <th>
+                Chit Value
+              </th>
+
+              <th>
+                Key Lever
+              </th>
+
+              <th>
+                Follow-up
+              </th>
+
+              <th>
+                Due Day
+              </th>
+
+              <th>
+                Pay Mode
+              </th>
+
+              <th>
+                Collection Type
+              </th>
+
+              <th>
+                Remarks
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            ${tableRows}
+
+          </tbody>
+
+        </table>
+
+
+        <div class="footer">
+
+          Generated on ${today}
+
+        </div>
+
+
+      </body>
+
+      </html>
+    `);
+
+
+    printWindow.document.close();
+
+
+    printWindow.focus();
+
+
+    setTimeout(() => {
+
+      printWindow.print();
+
+      printWindow.close();
+
+    }, 500);
+
+  };
+
+
   return (
 
     <div className="reports-page">
@@ -391,7 +900,8 @@ function Reports() {
                 { length: 31 },
                 (_, index) => {
 
-                  const day = index + 1;
+                  const day =
+                    index + 1;
 
                   return (
 
@@ -491,6 +1001,22 @@ function Reports() {
 
             </button>
 
+
+            {/* PRINT BUTTON */}
+
+            <button
+              type="button"
+              className="filter-btn"
+              onClick={handlePrint}
+              title="Print Report"
+            >
+
+              <FaPrint />
+
+              Print
+
+            </button>
+
           </div>
 
 
@@ -540,17 +1066,49 @@ function Reports() {
 
               <tr>
 
-                <th>S.No</th>
-                <th>Branch</th>
-                <th>Staff Name</th>
-                <th>Customer Name</th>
-                <th>Chit Value</th>
-                <th>Key Lever</th>
-                <th>Follow-up</th>
-                <th>Due Day</th>
-                <th>Pay Mode</th>
-                <th>Collection Type</th>
-                <th>Remarks</th>
+                <th>
+                  S.No
+                </th>
+
+                <th>
+                  Branch
+                </th>
+
+                <th>
+                  Staff Name
+                </th>
+
+                <th>
+                  Customer Name
+                </th>
+
+                <th>
+                  Chit Value
+                </th>
+
+                <th>
+                  Key Lever
+                </th>
+
+                <th>
+                  Follow-up
+                </th>
+
+                <th>
+                  Due Day
+                </th>
+
+                <th>
+                  Pay Mode
+                </th>
+
+                <th>
+                  Collection Type
+                </th>
+
+                <th>
+                  Remarks
+                </th>
 
               </tr>
 
@@ -676,5 +1234,6 @@ function Reports() {
   );
 
 }
+
 
 export default Reports;
