@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import {
   FaClipboardList,
   FaBuilding,
@@ -13,9 +14,17 @@ import {
   FaCommentAlt,
   FaSave,
   FaTimes,
+  FaEdit,
+  FaTrash,
+  FaSyncAlt,
 } from "react-icons/fa";
 
 import "./Procedure.css";
+
+
+const API_URL =
+  "https://seyal-chits-backend.onrender.com/api/procedures";
+
 
 function Procedure() {
 
@@ -38,22 +47,14 @@ function Procedure() {
 
 
   // =====================================================
-  // HANDLE CHANGE
+  // PROCEDURES LIST
   // =====================================================
 
-  const handleChange = (e) => {
+  const [procedures, setProcedures] = useState([]);
 
-    const {
-      name,
-      value,
-    } = e.target;
+  const [editingId, setEditingId] = useState(null);
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-  };
+  const [loading, setLoading] = useState(false);
 
 
   // =====================================================
@@ -75,11 +76,84 @@ function Procedure() {
       remarks: "",
     });
 
+    setEditingId(null);
   };
 
 
   // =====================================================
-  // SAVE PROCEDURE
+  // HANDLE CHANGE
+  // =====================================================
+
+  const handleChange = (e) => {
+
+    const {
+      name,
+      value,
+    } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+  };
+
+
+  // =====================================================
+  // FETCH ALL PROCEDURES
+  // =====================================================
+
+  const fetchProcedures = async () => {
+
+    try {
+
+      setLoading(true);
+
+      const response = await fetch(API_URL);
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.message || "Failed to fetch procedures"
+        );
+      }
+
+      setProcedures(result.data || []);
+
+    } catch (error) {
+
+      console.error(
+        "Procedure Fetch Error:",
+        error
+      );
+
+      alert(
+        "Unable to load procedures. Please check backend."
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+
+  // =====================================================
+  // LOAD PROCEDURES ON PAGE LOAD
+  // =====================================================
+
+  useEffect(() => {
+
+    fetchProcedures();
+
+  }, []);
+
+
+  // =====================================================
+  // SAVE / UPDATE PROCEDURE
   // =====================================================
 
   const handleSubmit = async (e) => {
@@ -88,10 +162,21 @@ function Procedure() {
 
     try {
 
+      const isEditing = editingId !== null;
+
+      const url = isEditing
+        ? `${API_URL}/${editingId}`
+        : API_URL;
+
+      const method = isEditing
+        ? "PUT"
+        : "POST";
+
+
       const response = await fetch(
-        "https://seyal-chits-backend.onrender.com/api/procedures",
+        url,
         {
-          method: "POST",
+          method: method,
 
           headers: {
             "Content-Type": "application/json",
@@ -109,24 +194,40 @@ function Procedure() {
 
         alert(
           result.message ||
-          "Failed to save procedure"
+          (
+            isEditing
+              ? "Failed to update procedure"
+              : "Failed to save procedure"
+          )
         );
 
         return;
       }
 
 
-      alert(
-        "Procedure saved successfully!"
-      );
+      if (isEditing) {
+
+        alert(
+          "Procedure updated successfully!"
+        );
+
+      } else {
+
+        alert(
+          "Procedure saved successfully!"
+        );
+
+      }
 
 
       handleReset();
 
+      await fetchProcedures();
+
     } catch (error) {
 
       console.error(
-        "Save Error:",
+        "Save / Update Error:",
         error
       );
 
@@ -135,6 +236,135 @@ function Procedure() {
       );
 
     }
+
+  };
+
+
+  // =====================================================
+  // EDIT PROCEDURE
+  // =====================================================
+
+  const handleEdit = (procedure) => {
+
+    setEditingId(procedure.id);
+
+    setFormData({
+      branch: procedure.branch || "",
+      staffName: procedure.staffName || "",
+      customerName: procedure.customerName || "",
+      chitValue:
+        procedure.chitValue !== null &&
+        procedure.chitValue !== undefined
+          ? String(procedure.chitValue)
+          : "",
+      keyLever: procedure.keyLever || "",
+      followUp:
+        procedure.followUp !== null &&
+        procedure.followUp !== undefined
+          ? String(procedure.followUp)
+          : "",
+      dueDay:
+        procedure.dueDay !== null &&
+        procedure.dueDay !== undefined
+          ? String(procedure.dueDay)
+          : "",
+      payMode: procedure.payMode || "",
+      collectionType:
+        procedure.collectionType || "",
+      remarks: procedure.remarks || "",
+    });
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
+  };
+
+
+  // =====================================================
+  // DELETE PROCEDURE
+  // =====================================================
+
+  const handleDelete = async (id) => {
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this procedure?"
+    );
+
+    if (!confirmDelete) {
+      return;
+    }
+
+
+    try {
+
+      const response = await fetch(
+        `${API_URL}/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+
+      const result = await response.json();
+
+
+      if (!response.ok) {
+
+        alert(
+          result.message ||
+          "Failed to delete procedure"
+        );
+
+        return;
+      }
+
+
+      alert(
+        "Procedure deleted successfully!"
+      );
+
+
+      if (editingId === id) {
+        handleReset();
+      }
+
+
+      await fetchProcedures();
+
+    } catch (error) {
+
+      console.error(
+        "Delete Error:",
+        error
+      );
+
+      alert(
+        "Unable to connect to server. Please check backend."
+      );
+
+    }
+
+  };
+
+
+  // =====================================================
+  // FORMAT CHIT VALUE
+  // =====================================================
+
+  const formatChitValue = (value) => {
+
+    if (
+      value === null ||
+      value === undefined ||
+      value === ""
+    ) {
+      return "-";
+    }
+
+    return `₹${Number(value).toLocaleString("en-IN")}`;
 
   };
 
@@ -194,11 +424,15 @@ function Procedure() {
           <div>
 
             <h2>
-              New Procedure
+              {editingId
+                ? "Edit Procedure"
+                : "New Procedure"}
             </h2>
 
             <p>
-              Enter the customer procedure details below
+              {editingId
+                ? "Update the customer procedure details below"
+                : "Enter the customer procedure details below"}
             </p>
 
           </div>
@@ -545,7 +779,8 @@ function Procedure() {
                   { length: 31 },
                   (_, index) => {
 
-                    const day = index + 1;
+                    const day =
+                      index + 1;
 
                     return (
 
@@ -704,7 +939,9 @@ function Procedure() {
 
               <FaTimes />
 
-              Clear
+              {editingId
+                ? "Cancel Edit"
+                : "Clear"}
 
             </button>
 
@@ -714,9 +951,13 @@ function Procedure() {
               className="save-button"
             >
 
-              <FaSave />
+              {editingId
+                ? <FaEdit />
+                : <FaSave />}
 
-              Save Procedure
+              {editingId
+                ? "Update Procedure"
+                : "Save Procedure"}
 
             </button>
 
@@ -726,12 +967,368 @@ function Procedure() {
 
         </form>
 
+
       </div>
+
+
+
+      {/* =====================================================
+          SAVED PROCEDURES
+      ===================================================== */}
+
+      <div
+        className="procedure-card"
+        style={{
+          marginTop: "24px",
+        }}
+      >
+
+        <div className="card-heading">
+
+          <div className="heading-icon">
+
+            <FaClipboardList />
+
+          </div>
+
+
+          <div>
+
+            <h2>
+              Saved Procedures
+            </h2>
+
+            <p>
+              View, edit and delete procedure entries
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            onClick={fetchProcedures}
+            title="Refresh"
+            style={{
+              marginLeft: "auto",
+              border: "none",
+              background: "#f5f7fa",
+              width: "42px",
+              height: "42px",
+              borderRadius: "10px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#d9a400",
+              fontSize: "17px",
+            }}
+          >
+
+            <FaSyncAlt />
+
+          </button>
+
+        </div>
+
+
+
+        {/* =================================================
+            LOADING
+        ================================================= */}
+
+        {loading && (
+
+          <div
+            style={{
+              padding: "30px",
+              textAlign: "center",
+              color: "#718096",
+            }}
+          >
+
+            Loading procedures...
+
+          </div>
+
+        )}
+
+
+
+        {/* =================================================
+            NO DATA
+        ================================================= */}
+
+        {!loading &&
+          procedures.length === 0 && (
+
+            <div
+              style={{
+                padding: "35px",
+                textAlign: "center",
+                color: "#718096",
+              }}
+            >
+
+              No procedures found.
+
+            </div>
+
+          )}
+
+
+
+        {/* =================================================
+            PROCEDURE TABLE
+        ================================================= */}
+
+        {!loading &&
+          procedures.length > 0 && (
+
+            <div
+              style={{
+                width: "100%",
+                overflowX: "auto",
+                marginTop: "10px",
+              }}
+            >
+
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  minWidth: "1050px",
+                }}
+              >
+
+                <thead>
+
+                  <tr
+                    style={{
+                      background: "#f8fafc",
+                    }}
+                  >
+
+                    <th style={tableHeaderStyle}>
+                      S.No
+                    </th>
+
+                    <th style={tableHeaderStyle}>
+                      Branch
+                    </th>
+
+                    <th style={tableHeaderStyle}>
+                      Staff
+                    </th>
+
+                    <th style={tableHeaderStyle}>
+                      Customer
+                    </th>
+
+                    <th style={tableHeaderStyle}>
+                      Chit Value
+                    </th>
+
+                    <th style={tableHeaderStyle}>
+                      Follow-up
+                    </th>
+
+                    <th style={tableHeaderStyle}>
+                      Due Day
+                    </th>
+
+                    <th style={tableHeaderStyle}>
+                      Pay Mode
+                    </th>
+
+                    <th style={tableHeaderStyle}>
+                      Collection
+                    </th>
+
+                    <th style={tableHeaderStyle}>
+                      Actions
+                    </th>
+
+                  </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                  {procedures.map(
+                    (procedure, index) => (
+
+                      <tr
+                        key={procedure.id}
+                        style={{
+                          borderBottom:
+                            "1px solid #edf2f7",
+                        }}
+                      >
+
+                        <td style={tableCellStyle}>
+                          {index + 1}
+                        </td>
+
+                        <td style={tableCellStyle}>
+                          {procedure.branch}
+                        </td>
+
+                        <td style={tableCellStyle}>
+                          {procedure.staffName}
+                        </td>
+
+                        <td
+                          style={{
+                            ...tableCellStyle,
+                            fontWeight: "600",
+                            color: "#17324d",
+                          }}
+                        >
+                          {procedure.customerName}
+                        </td>
+
+                        <td style={tableCellStyle}>
+                          {formatChitValue(
+                            procedure.chitValue
+                          )}
+                        </td>
+
+                        <td style={tableCellStyle}>
+                          {procedure.followUp}
+                        </td>
+
+                        <td style={tableCellStyle}>
+                          {procedure.dueDay}
+                        </td>
+
+                        <td style={tableCellStyle}>
+                          {procedure.payMode}
+                        </td>
+
+                        <td style={tableCellStyle}>
+                          {procedure.collectionType}
+                        </td>
+
+
+                        {/* ACTIONS */}
+
+                        <td
+                          style={{
+                            ...tableCellStyle,
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleEdit(
+                                procedure
+                              )
+                            }
+                            title="Edit"
+                            style={{
+                              border: "none",
+                              background:
+                                "#fff7df",
+                              color: "#d9a400",
+                              width: "36px",
+                              height: "36px",
+                              borderRadius: "8px",
+                              cursor: "pointer",
+                              marginRight: "8px",
+                              display:
+                                "inline-flex",
+                              alignItems:
+                                "center",
+                              justifyContent:
+                                "center",
+                            }}
+                          >
+
+                            <FaEdit />
+
+                          </button>
+
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDelete(
+                                procedure.id
+                              )
+                            }
+                            title="Delete"
+                            style={{
+                              border: "none",
+                              background:
+                                "#fff0f0",
+                              color: "#dc3545",
+                              width: "36px",
+                              height: "36px",
+                              borderRadius: "8px",
+                              cursor: "pointer",
+                              display:
+                                "inline-flex",
+                              alignItems:
+                                "center",
+                              justifyContent:
+                                "center",
+                            }}
+                          >
+
+                            <FaTrash />
+
+                          </button>
+
+                        </td>
+
+                      </tr>
+
+                    )
+                  )}
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+          )}
+
+      </div>
+
 
     </div>
 
   );
 
 }
+
+
+// =====================================================
+// TABLE STYLES
+// =====================================================
+
+const tableHeaderStyle = {
+  padding: "14px 12px",
+  textAlign: "left",
+  fontSize: "13px",
+  fontWeight: "700",
+  color: "#17324d",
+  borderBottom: "1px solid #e2e8f0",
+  whiteSpace: "nowrap",
+};
+
+
+const tableCellStyle = {
+  padding: "14px 12px",
+  fontSize: "13px",
+  color: "#4a5568",
+  whiteSpace: "nowrap",
+};
+
 
 export default Procedure;

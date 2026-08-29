@@ -11,9 +11,6 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
-
-    console.log("Received Procedure Data:", req.body);
-
     const {
       branch,
       staffName,
@@ -27,86 +24,22 @@ router.post("/", async (req, res) => {
       remarks,
     } = req.body;
 
-
-    // =================================================
-    // VALIDATION
-    // =================================================
-
-    if (!branch) {
-      return res.status(400).json({
-        success: false,
-        message: "Please select Branch",
-      });
-    }
-
-    if (!staffName) {
-      return res.status(400).json({
-        success: false,
-        message: "Please select Staff Name",
-      });
-    }
-
-    if (!customerName) {
-      return res.status(400).json({
-        success: false,
-        message: "Please enter Customer Name",
-      });
-    }
-
-    if (!chitValue) {
-      return res.status(400).json({
-        success: false,
-        message: "Please select Chit Value",
-      });
-    }
-
-    if (!keyLever) {
-      return res.status(400).json({
-        success: false,
-        message: "Please select Key Lever",
-      });
-    }
-
     if (
+      !branch ||
+      !staffName ||
+      !customerName ||
+      !chitValue ||
+      !keyLever ||
       followUp === "" ||
-      followUp === null ||
-      followUp === undefined
+      !dueDay ||
+      !payMode ||
+      !collectionType
     ) {
       return res.status(400).json({
         success: false,
-        message: "Please select Follow-up",
+        message: "Please fill all required fields",
       });
     }
-
-    if (
-      dueDay === "" ||
-      dueDay === null ||
-      dueDay === undefined
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "Please select Due Day",
-      });
-    }
-
-    if (!payMode) {
-      return res.status(400).json({
-        success: false,
-        message: "Please select Pay Mode",
-      });
-    }
-
-    if (!collectionType) {
-      return res.status(400).json({
-        success: false,
-        message: "Please select Collection Type",
-      });
-    }
-
-
-    // =================================================
-    // SAVE TO MYSQL
-    // =================================================
 
     const [result] = await pool.query(
       `
@@ -139,35 +72,21 @@ router.post("/", async (req, res) => {
       ]
     );
 
-
-    console.log(
-      "Procedure Saved Successfully. ID:",
-      result.insertId
-    );
-
-
     res.status(201).json({
       success: true,
       message: "Procedure saved successfully",
       id: result.insertId,
     });
 
-
   } catch (error) {
-
-    console.error("=================================");
-    console.error("PROCEDURE SAVE ERROR");
-    console.error(error);
-    console.error("=================================");
+    console.error("Procedure Save Error:", error);
 
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Failed to save procedure",
     });
-
   }
 });
-
 
 
 // =====================================================
@@ -176,9 +95,7 @@ router.post("/", async (req, res) => {
 // =====================================================
 
 router.get("/", async (req, res) => {
-
   try {
-
     const [rows] = await pool.query(
       `
       SELECT
@@ -199,33 +116,149 @@ router.get("/", async (req, res) => {
       `
     );
 
-
-    console.log(
-      "Procedures Fetched:",
-      rows.length
-    );
-
-
     res.json({
       success: true,
       data: rows,
     });
 
-
   } catch (error) {
-
-    console.error("=================================");
-    console.error("PROCEDURE FETCH ERROR");
-    console.error(error);
-    console.error("=================================");
+    console.error("Procedure Fetch Error:", error);
 
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Failed to fetch procedures",
+    });
+  }
+});
+
+
+// =====================================================
+// UPDATE PROCEDURE
+// PUT /api/procedures/:id
+// =====================================================
+
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      branch,
+      staffName,
+      customerName,
+      chitValue,
+      keyLever,
+      followUp,
+      dueDay,
+      payMode,
+      collectionType,
+      remarks,
+    } = req.body;
+
+    if (
+      !branch ||
+      !staffName ||
+      !customerName ||
+      !chitValue ||
+      !keyLever ||
+      followUp === "" ||
+      !dueDay ||
+      !payMode ||
+      !collectionType
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all required fields",
+      });
+    }
+
+    const [result] = await pool.query(
+      `
+      UPDATE procedures
+      SET
+        branch = ?,
+        staff_name = ?,
+        customer_name = ?,
+        chit_value = ?,
+        key_lever = ?,
+        follow_up = ?,
+        due_day = ?,
+        pay_mode = ?,
+        collection_type = ?,
+        remarks = ?
+      WHERE id = ?
+      `,
+      [
+        branch,
+        staffName,
+        customerName,
+        chitValue,
+        keyLever,
+        followUp,
+        dueDay,
+        payMode,
+        collectionType,
+        remarks || null,
+        id,
+      ]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Procedure not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Procedure updated successfully",
     });
 
-  }
+  } catch (error) {
+    console.error("Procedure Update Error:", error);
 
+    res.status(500).json({
+      success: false,
+      message: "Failed to update procedure",
+    });
+  }
+});
+
+
+// =====================================================
+// DELETE PROCEDURE
+// DELETE /api/procedures/:id
+// =====================================================
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [result] = await pool.query(
+      "DELETE FROM procedures WHERE id = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Procedure not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Procedure deleted successfully",
+    });
+
+  } catch (error) {
+    console.error("Procedure Delete Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete procedure",
+    });
+  }
 });
 
 
