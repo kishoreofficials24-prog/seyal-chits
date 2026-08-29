@@ -1,0 +1,384 @@
+.procedure-page {
+  min-height: 100vh;
+
+  padding: 32px 36px 45px;
+
+  background: #f5f7f9;
+
+  color: #1b2d38;
+}
+
+
+/* ================= HEADER ================= */
+
+.procedure-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 28px;
+}
+
+.procedure-header h1 {
+  margin: 0;
+
+  color: #182d3b;
+
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.procedure-header p {
+  margin: 6px 0 0;
+
+  color: #8c979e;
+
+  font-size: 14px;
+}
+
+.procedure-title-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #182d3b;
+
+  color: #e4ad19;
+
+  font-size: 20px;
+
+  box-shadow: 0 6px 18px rgba(24,45,59,0.14);
+}
+
+
+/* ================= CARD ================= */
+
+.procedure-card {
+  position: relative;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e7ea;
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  box-shadow: 0 7px 25px rgba(24,45,59,0.045);
+}
+
+.procedure-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 3px;
+
+  background: #e4ad19;
+}
+
+
+/* ================= CARD HEADING ================= */
+
+.card-heading {
+  padding: 24px 27px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  border-bottom: 1px solid #edf0f2;
+}
+
+.heading-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #fff4d6;
+
+  color: #d39d0d;
+
+  font-size: 18px;
+}
+
+.card-heading h2 {
+  margin: 0;
+
+  color: #1b303d;
+
+  font-size: 18px;
+}
+
+.card-heading p {
+  margin: 5px 0 0;
+
+  color: #9aa3a9;
+
+  font-size: 12px;
+}
+
+
+/* ================= FORM ================= */
+
+.procedure-card form {
+  padding: 28px;
+}
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 21px;
+
+  margin-bottom: 22px;
+}
+
+.form-group {
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+
+/* ================= LABEL ================= */
+
+.form-group label {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 8px;
+
+  color: #40505a;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+.form-group label svg {
+  color: #d3a016;
+
+  font-size: 12px;
+}
+
+
+/* ================= INPUTS ================= */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+
+  border: 1px solid #dce2e6;
+
+  border-radius: 9px;
+
+  background: #fbfcfd;
+
+  color: #263842;
+
+  outline: none;
+
+  font-size: 14px;
+
+  transition: all 0.2s ease;
+}
+
+.form-group input,
+.form-group select {
+  height: 47px;
+
+  padding: 0 14px;
+}
+
+.form-group textarea {
+  min-height: 105px;
+
+  padding: 13px 14px;
+
+  resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #adb5ba;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: #c5cdd2;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  background: #ffffff;
+
+  border-color: #d7a417;
+
+  box-shadow: 0 0 0 3px rgba(215,164,23,0.10);
+}
+
+.form-group select {
+  cursor: pointer;
+}
+
+
+/* ================= REMARKS ================= */
+
+.remarks-group {
+  margin-top: 4px;
+
+  margin-bottom: 26px;
+}
+
+
+/* ================= ACTIONS ================= */
+
+.form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding-top: 23px;
+
+  border-top: 1px solid #edf0f2;
+}
+
+.reset-button,
+.save-button {
+  height: 45px;
+
+  padding: 0 21px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.reset-button {
+  border: 1px solid #d8dee2;
+
+  background: #ffffff;
+
+  color: #68757d;
+}
+
+.reset-button:hover {
+  background: #f7f9fa;
+
+  border-color: #c5cdd2;
+}
+
+.save-button {
+  border: 1px solid #d09d12;
+
+  background: #e4ad19;
+
+  color: #182d3b;
+
+  box-shadow: 0 5px 13px rgba(228,173,25,0.18);
+}
+
+.save-button:hover {
+  background: #d6a114;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 7px 17px rgba(228,173,25,0.25);
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1000px) {
+
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 700px) {
+
+  .procedure-page {
+    padding: 25px 20px 35px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .procedure-card form {
+    padding: 23px;
+  }
+
+}
+
+@media (max-width: 500px) {
+
+  .procedure-header {
+    align-items: flex-start;
+  }
+
+  .procedure-title-icon {
+    display: none;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .reset-button,
+  .save-button {
+    width: 100%;
+  }
+
+}
+.procedure-card {
+  overflow: visible !important;
+}
+
+.form-grid {
+  overflow: visible !important;
+}

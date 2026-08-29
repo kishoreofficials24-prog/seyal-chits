@@ -1,0 +1,648 @@
+/* =========================================================
+   SEYAL CHITS - REPORTS
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+
+/* ================= PAGE ================= */
+
+.reports-page {
+  min-height: 100vh;
+
+  padding: 35px 38px 50px;
+
+  background: #f5f7f9;
+
+  color: #1b2d38;
+}
+
+
+/* ================= HEADER ================= */
+
+.reports-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 28px;
+}
+
+
+.reports-header h1 {
+  margin: 0;
+
+  color: #182d3b;
+
+  font-size: 30px;
+  font-weight: 700;
+}
+
+
+.reports-header p {
+  margin: 6px 0 0;
+
+  color: #8c979e;
+
+  font-size: 14px;
+}
+
+
+.reports-header-icon {
+  width: 55px;
+  height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  background: #182d3b;
+
+  color: #e4ad19;
+
+  font-size: 23px;
+
+  box-shadow:
+    0 6px 18px rgba(24, 45, 59, 0.14);
+}
+
+
+/* ================= FILTER CARD ================= */
+
+.reports-filter-card {
+  position: relative;
+
+  margin-bottom: 25px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e7ea;
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 7px 25px rgba(24, 45, 59, 0.045);
+}
+
+
+.reports-filter-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 3px;
+
+  background: #e4ad19;
+}
+
+
+/* ================= FILTER TITLE ================= */
+
+.filter-title {
+  padding: 22px 25px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  border-bottom: 1px solid #edf0f2;
+}
+
+
+.filter-title-icon {
+  width: 43px;
+  height: 43px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #fff4d6;
+
+  color: #d39d0d;
+
+  font-size: 17px;
+}
+
+
+.filter-title h2 {
+  margin: 0;
+
+  color: #1b303d;
+
+  font-size: 19px;
+  font-weight: 700;
+}
+
+
+.filter-title p {
+  margin: 4px 0 0;
+
+  color: #9aa3a9;
+
+  font-size: 13px;
+}
+
+
+/* ================= FILTER ROW ================= */
+
+.filters-row {
+  padding: 25px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr
+    1fr
+    1fr
+    auto;
+
+  gap: 18px;
+
+  align-items: end;
+}
+
+
+/* ================= FILTER ================= */
+
+.report-filter {
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+.report-filter label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 8px;
+
+  color: #40505a;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+
+.report-filter label svg {
+  color: #d3a016;
+
+  font-size: 13px;
+}
+
+
+/* ================= INPUTS ================= */
+
+.report-filter select,
+.report-filter input {
+  width: 100%;
+
+  height: 47px;
+
+  padding: 0 14px;
+
+  border: 1px solid #dce2e6;
+
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #fbfcfd;
+
+  color: #263842;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  transition: all 0.2s ease;
+}
+
+
+.report-filter select {
+  cursor: pointer;
+}
+
+
+.report-filter select:hover,
+.report-filter input:hover {
+  border-color: #c6ced3;
+
+  background: #ffffff;
+}
+
+
+.report-filter select:focus,
+.report-filter input:focus {
+  background: #ffffff;
+
+  border-color: #d7a417;
+
+  box-shadow:
+    0 0 0 3px rgba(215, 164, 23, 0.10);
+}
+
+
+/* ================= BUTTONS ================= */
+
+.filter-buttons {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+}
+
+
+.filter-btn,
+.clear-filter-btn {
+  height: 47px;
+
+  padding: 0 17px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  border-radius: 9px;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+
+/* FILTER */
+
+.filter-btn {
+  border: 1px solid #d09d12;
+
+  background: #e4ad19;
+
+  color: #182d3b;
+
+  box-shadow:
+    0 4px 12px rgba(228, 173, 25, 0.18);
+}
+
+
+.filter-btn:hover {
+  background: #d39e0d;
+
+  transform: translateY(-1px);
+}
+
+
+/* CLEAR */
+
+.clear-filter-btn {
+  border: 1px solid #d8dee2;
+
+  background: #ffffff;
+
+  color: #69767e;
+}
+
+
+.clear-filter-btn:hover {
+  background: #f7f9fa;
+
+  border-color: #c7cfd4;
+}
+
+
+/* ================= TABLE CARD ================= */
+
+.reports-table-card {
+  background: #ffffff;
+
+  border: 1px solid #e2e7ea;
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 7px 25px rgba(24, 45, 59, 0.04);
+}
+
+
+/* ================= TABLE HEADER ================= */
+
+.table-header {
+  min-height: 80px;
+
+  padding: 19px 25px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  border-bottom: 1px solid #edf0f2;
+}
+
+
+.table-header h2 {
+  margin: 0;
+
+  color: #1b303d;
+
+  font-size: 19px;
+  font-weight: 700;
+}
+
+
+.table-header p {
+  margin: 5px 0 0;
+
+  color: #9aa3a9;
+
+  font-size: 13px;
+}
+
+
+.record-count {
+  padding: 8px 14px;
+
+  border-radius: 20px;
+
+  background: #fff5d9;
+
+  color: #ad7e08;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* ================= TABLE ================= */
+
+.table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+.table-wrapper table {
+  width: 100%;
+
+  min-width: 1300px;
+
+  border-collapse: collapse;
+}
+
+
+.table-wrapper thead {
+  background: #f7f9fa;
+}
+
+
+.table-wrapper th {
+  padding: 16px 14px;
+
+  text-align: left;
+
+  color: #65737c;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  border-bottom: 1px solid #e3e8eb;
+}
+
+
+.table-wrapper td {
+  padding: 16px 14px;
+
+  color: #52616a;
+
+  font-size: 14px;
+
+  white-space: nowrap;
+
+  border-bottom: 1px solid #f0f2f4;
+}
+
+
+.table-wrapper tbody tr {
+  transition: background 0.15s ease;
+}
+
+
+.table-wrapper tbody tr:hover {
+  background: #fffdf5;
+}
+
+
+.table-wrapper tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* ================= TABLE HIGHLIGHTS ================= */
+
+.table-wrapper th:first-child,
+.table-wrapper td:first-child {
+  color: #bd8d0b;
+
+  font-weight: 700;
+}
+
+
+.table-wrapper td:nth-child(4) {
+  color: #263842;
+
+  font-weight: 700;
+}
+
+
+.table-wrapper td:nth-child(5) {
+  color: #b38408;
+
+  font-weight: 700;
+}
+
+
+/* ================= NO DATA ================= */
+
+.no-data {
+  min-height: 285px;
+
+  padding: 45px 20px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+}
+
+
+.no-data-icon {
+  width: 60px;
+  height: 60px;
+
+  margin-bottom: 15px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 15px;
+
+  background: #fff4d6;
+
+  color: #d3a016;
+
+  font-size: 24px;
+}
+
+
+.no-data h3 {
+  margin: 0 0 7px;
+
+  color: #34444d;
+
+  font-size: 18px;
+}
+
+
+.no-data p {
+  margin: 0;
+
+  color: #9aa3a9;
+
+  font-size: 13px;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1250px) {
+
+  .filters-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filter-buttons {
+    grid-column: 1 / -1;
+
+    justify-content: flex-end;
+  }
+
+}
+
+
+@media (max-width: 850px) {
+
+  .reports-page {
+    padding: 25px 20px 40px;
+  }
+
+  .reports-header h1 {
+    font-size: 27px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .filters-row {
+    grid-template-columns: 1fr;
+
+    padding: 20px;
+  }
+
+  .filter-buttons {
+    grid-column: auto;
+
+    width: 100%;
+
+    flex-direction: column;
+  }
+
+  .filter-btn,
+  .clear-filter-btn {
+    width: 100%;
+  }
+
+  .table-header {
+    padding: 18px;
+
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .record-count {
+    font-size: 12px;
+  }
+
+}
+
+
+@media (max-width: 450px) {
+
+  .reports-page {
+    padding: 20px 15px 30px;
+  }
+
+  .reports-header {
+    align-items: flex-start;
+  }
+
+  .reports-header-icon {
+    width: 48px;
+    height: 48px;
+
+    font-size: 19px;
+  }
+
+}

@@ -1,24 +1,64 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Procedure from "./pages/Procedure";
+import Reports from "./pages/Reports";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+
+      <Routes>
+
+        {/* ================= LOGIN ================= */}
+
+        <Route
+          path="/"
+          element={<Login />}
+        />
+
+
+        {/* ================= DASHBOARD ================= */}
+
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
+
+
+        {/* ================= PROCEDURE ================= */}
+
+        <Route
+          path="/procedure"
+          element={<Procedure />}
+        />
+
+
+        {/* ================= REPORTS ================= */}
+
+        <Route
+          path="/reports"
+          element={<Reports />}
+        />
+
+
+        {/* ================= UNKNOWN URL ================= */}
+
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
+
+      </Routes>
+
+    </BrowserRouter>
   );
 }
 
