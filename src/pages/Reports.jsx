@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import {
   FaChartBar,
@@ -14,6 +14,18 @@ import {
 
 import "./Reports.css";
 
+
+// =====================================================
+// API URL
+// =====================================================
+
+const API_URL =
+  "https://seyal-chits-backend.onrender.com/api/procedures";
+
+
+// =====================================================
+// REPORTS
+// =====================================================
 
 function Reports() {
 
@@ -49,6 +61,13 @@ function Reports() {
 
 
   // =====================================================
+  // LOADING
+  // =====================================================
+
+  const [loading, setLoading] = useState(false);
+
+
+  // =====================================================
   // FETCH PROCEDURES
   // =====================================================
 
@@ -56,26 +75,29 @@ function Reports() {
 
     try {
 
-      const response = await fetch(
-        "https://seyal-chits-backend.onrender.com/api/procedures"
-      );
+      setLoading(true);
 
-
-      if (!response.ok) {
-
-        throw new Error(
-          "Failed to fetch procedures"
-        );
-
-      }
-
+      const response = await fetch(API_URL);
 
       const result = await response.json();
 
+      if (!response.ok) {
+        throw new Error(
+          result.message || "Failed to fetch procedures"
+        );
+      }
 
       if (result.success) {
 
-        setData(result.data);
+        setData(
+          Array.isArray(result.data)
+            ? result.data
+            : []
+        );
+
+      } else {
+
+        setData([]);
 
       }
 
@@ -85,6 +107,10 @@ function Reports() {
         "Reports Fetch Error:",
         error
       );
+
+    } finally {
+
+      setLoading(false);
 
     }
 
@@ -103,6 +129,84 @@ function Reports() {
 
 
   // =====================================================
+  // DYNAMIC STAFF NAMES
+  // =====================================================
+  // IMPORTANT:
+  // These names come directly from Procedure data.
+  // So whenever a new staff is added in Procedure,
+  // Reports will automatically show that name.
+  // =====================================================
+
+  const staffNames = useMemo(() => {
+
+    const names = data
+      .map((item) =>
+        String(item.staffName || "").trim()
+      )
+      .filter(Boolean);
+
+    return [...new Set(names)].sort(
+      (a, b) =>
+        a.localeCompare(
+          b,
+          "en",
+          {
+            sensitivity: "base",
+          }
+        )
+    );
+
+  }, [data]);
+
+
+  // =====================================================
+  // DYNAMIC BRANCH NAMES
+  // =====================================================
+
+  const branchNames = useMemo(() => {
+
+    const branches = data
+      .map((item) =>
+        String(item.branch || "").trim()
+      )
+      .filter(Boolean);
+
+    return [...new Set(branches)].sort(
+      (a, b) =>
+        a.localeCompare(
+          b,
+          "en",
+          {
+            sensitivity: "base",
+          }
+        )
+    );
+
+  }, [data]);
+
+
+  // =====================================================
+  // DYNAMIC CHIT VALUES
+  // =====================================================
+
+  const chitValues = useMemo(() => {
+
+    const values = data
+      .map((item) => Number(item.chitValue))
+      .filter(
+        (value) =>
+          !Number.isNaN(value) &&
+          value > 0
+      );
+
+    return [...new Set(values)].sort(
+      (a, b) => a - b
+    );
+
+  }, [data]);
+
+
+  // =====================================================
   // HANDLE FILTER CHANGE
   // =====================================================
 
@@ -112,7 +216,6 @@ function Reports() {
       name,
       value,
     } = e.target;
-
 
     setFilters((previous) => ({
       ...previous,
@@ -148,7 +251,6 @@ function Reports() {
       chitValue: "",
     };
 
-
     setFilters(emptyFilters);
 
     setAppliedFilters(emptyFilters);
@@ -167,7 +269,7 @@ function Reports() {
 
     const branchMatch =
       !appliedFilters.branch ||
-      String(item.branch).trim() ===
+      String(item.branch || "").trim() ===
       String(appliedFilters.branch).trim();
 
 
@@ -175,7 +277,7 @@ function Reports() {
 
     const staffMatch =
       !appliedFilters.staff ||
-      String(item.staffName).trim() ===
+      String(item.staffName || "").trim() ===
       String(appliedFilters.staff).trim();
 
 
@@ -203,6 +305,28 @@ function Reports() {
     );
 
   });
+
+
+  // =====================================================
+  // FORMAT CURRENCY
+  // =====================================================
+
+  const formatCurrency = (value) => {
+
+    const number = Number(value);
+
+    if (
+      Number.isNaN(number) ||
+      number === 0
+    ) {
+      return "₹0";
+    }
+
+    return `₹${number.toLocaleString(
+      "en-IN"
+    )}`;
+
+  };
 
 
   // =====================================================
@@ -241,6 +365,10 @@ function Reports() {
     }
 
 
+    // ===================================================
+    // TODAY'S DATE
+    // ===================================================
+
     const today =
       new Date().toLocaleDateString(
         "en-IN"
@@ -265,9 +393,9 @@ function Reports() {
 
     const chitValueText =
       appliedFilters.chitValue
-        ? `₹${Number(
+        ? formatCurrency(
             appliedFilters.chitValue
-          ).toLocaleString("en-IN")}`
+          )
         : "All Chit Values";
 
 
@@ -279,9 +407,12 @@ function Reports() {
       filteredData
         .map(
           (item, index) => `
+
             <tr>
 
-              <td>${index + 1}</td>
+              <td>
+                ${index + 1}
+              </td>
 
               <td>
                 ${item.branch || "-"}
@@ -296,9 +427,9 @@ function Reports() {
               </td>
 
               <td>
-                ₹${Number(
-                  item.chitValue || 0
-                ).toLocaleString("en-IN")}
+                ${formatCurrency(
+                  item.chitValue
+                )}
               </td>
 
               <td>
@@ -326,6 +457,7 @@ function Reports() {
               </td>
 
             </tr>
+
           `
         )
         .join("");
@@ -336,6 +468,7 @@ function Reports() {
     // ===================================================
 
     printWindow.document.write(`
+
       <!DOCTYPE html>
 
       <html>
@@ -565,6 +698,7 @@ function Reports() {
 
         <div class="filter-summary">
 
+
           <div class="filter-box">
 
             <strong>
@@ -608,6 +742,7 @@ function Reports() {
 
           </div>
 
+
         </div>
 
 
@@ -620,6 +755,7 @@ function Reports() {
 
 
         <table>
+
 
           <thead>
 
@@ -680,6 +816,7 @@ function Reports() {
 
           </tbody>
 
+
         </table>
 
 
@@ -693,11 +830,11 @@ function Reports() {
       </body>
 
       </html>
+
     `);
 
 
     printWindow.document.close();
-
 
     printWindow.focus();
 
@@ -712,6 +849,10 @@ function Reports() {
 
   };
 
+
+  // =====================================================
+  // RETURN
+  // =====================================================
 
   return (
 
@@ -786,7 +927,9 @@ function Reports() {
         <div className="filters-row">
 
 
-          {/* BRANCH */}
+          {/* =================================================
+              BRANCH
+          ================================================= */}
 
           <div className="report-filter">
 
@@ -809,17 +952,19 @@ function Reports() {
                 All Branches
               </option>
 
-              <option value="Natham">
-                Natham
-              </option>
 
-              <option value="Sendurai">
-                Sendurai
-              </option>
+              {branchNames.map(
+                (branch) => (
 
-              <option value="Palakurichi">
-                Palakurichi
-              </option>
+                  <option
+                    key={branch}
+                    value={branch}
+                  >
+                    {branch}
+                  </option>
+
+                )
+              )}
 
             </select>
 
@@ -827,7 +972,9 @@ function Reports() {
 
 
 
-          {/* STAFF */}
+          {/* =================================================
+              STAFF - DYNAMIC FROM PROCEDURE
+          ================================================= */}
 
           <div className="report-filter">
 
@@ -850,21 +997,19 @@ function Reports() {
                 All Staff
               </option>
 
-              <option value="Kishore">
-                Kishore
-              </option>
 
-              <option value="Thiyagarajan">
-                Thiyagarajan
-              </option>
+              {staffNames.map(
+                (staff) => (
 
-              <option value="Renuga">
-                Renuga
-              </option>
+                  <option
+                    key={staff}
+                    value={staff}
+                  >
+                    {staff}
+                  </option>
 
-              <option value="Prathap">
-                Prathap
-              </option>
+                )
+              )}
 
             </select>
 
@@ -872,7 +1017,9 @@ function Reports() {
 
 
 
-          {/* DUE DAY */}
+          {/* =================================================
+              DUE DAY
+          ================================================= */}
 
           <div className="report-filter">
 
@@ -923,7 +1070,9 @@ function Reports() {
 
 
 
-          {/* CHIT VALUE */}
+          {/* =================================================
+              CHIT VALUE - DYNAMIC FROM PROCEDURE
+          ================================================= */}
 
           <div className="report-filter">
 
@@ -946,25 +1095,19 @@ function Reports() {
                 All Chit Values
               </option>
 
-              <option value="50000">
-                ₹50,000
-              </option>
 
-              <option value="100000">
-                ₹1,00,000
-              </option>
+              {chitValues.map(
+                (value) => (
 
-              <option value="200000">
-                ₹2,00,000
-              </option>
+                  <option
+                    key={value}
+                    value={value}
+                  >
+                    {formatCurrency(value)}
+                  </option>
 
-              <option value="300000">
-                ₹3,00,000
-              </option>
-
-              <option value="500000">
-                ₹5,00,000
-              </option>
+                )
+              )}
 
             </select>
 
@@ -972,9 +1115,12 @@ function Reports() {
 
 
 
-          {/* BUTTONS */}
+          {/* =================================================
+              BUTTONS
+          ================================================= */}
 
           <div className="filter-buttons">
+
 
             <button
               type="button"
@@ -1002,8 +1148,6 @@ function Reports() {
             </button>
 
 
-            {/* PRINT BUTTON */}
-
             <button
               type="button"
               className="filter-btn"
@@ -1016,6 +1160,7 @@ function Reports() {
               Print
 
             </button>
+
 
           </div>
 
@@ -1060,7 +1205,9 @@ function Reports() {
 
         <div className="table-wrapper">
 
+
           <table>
+
 
             <thead>
 
@@ -1118,7 +1265,24 @@ function Reports() {
             <tbody>
 
 
-              {filteredData.length === 0 ? (
+              {loading ? (
+
+                <tr>
+
+                  <td
+                    colSpan="11"
+                    style={{
+                      textAlign: "center",
+                      padding: "30px",
+                    }}
+                  >
+                    Loading procedures...
+
+                  </td>
+
+                </tr>
+
+              ) : filteredData.length === 0 ? (
 
                 <tr>
 
@@ -1166,47 +1330,43 @@ function Reports() {
                       </td>
 
                       <td>
-                        {item.branch}
+                        {item.branch || "-"}
                       </td>
 
                       <td>
-                        {item.staffName}
+                        {item.staffName || "-"}
                       </td>
 
                       <td>
-                        {item.customerName}
+                        {item.customerName || "-"}
                       </td>
 
                       <td>
 
-                        ₹{" "}
-
-                        {Number(
-                          item.chitValue || 0
-                        ).toLocaleString(
-                          "en-IN"
+                        {formatCurrency(
+                          item.chitValue
                         )}
 
                       </td>
 
                       <td>
-                        {item.keyLever}
+                        {item.keyLever || "-"}
                       </td>
 
                       <td>
-                        {item.followUp}
+                        {item.followUp ?? "-"}
                       </td>
 
                       <td>
-                        {item.dueDay}
+                        {item.dueDay || "-"}
                       </td>
 
                       <td>
-                        {item.payMode}
+                        {item.payMode || "-"}
                       </td>
 
                       <td>
-                        {item.collectionType}
+                        {item.collectionType || "-"}
                       </td>
 
                       <td>
@@ -1220,9 +1380,11 @@ function Reports() {
 
               )}
 
+
             </tbody>
 
           </table>
+
 
         </div>
 
