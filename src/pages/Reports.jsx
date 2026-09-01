@@ -14,18 +14,8 @@ import {
 
 import "./Reports.css";
 
-
-// =====================================================
-// API URL
-// =====================================================
-
 const API_URL =
   "https://seyal-chits-backend.onrender.com/api/procedures";
-
-
-// =====================================================
-// REPORTS
-// =====================================================
 
 function Reports() {
 
@@ -35,9 +25,8 @@ function Reports() {
 
   const [data, setData] = useState([]);
 
-
   // =====================================================
-  // SELECTED FILTERS
+  // FILTERS
   // =====================================================
 
   const [filters, setFilters] = useState({
@@ -47,11 +36,6 @@ function Reports() {
     chitValue: "",
   });
 
-
-  // =====================================================
-  // APPLIED FILTERS
-  // =====================================================
-
   const [appliedFilters, setAppliedFilters] = useState({
     branch: "",
     staff: "",
@@ -59,26 +43,17 @@ function Reports() {
     chitValue: "",
   });
 
-
-  // =====================================================
-  // LOADING
-  // =====================================================
-
   const [loading, setLoading] = useState(false);
-
 
   // =====================================================
   // FETCH PROCEDURES
   // =====================================================
 
   const fetchProcedures = async () => {
-
     try {
-
       setLoading(true);
 
       const response = await fetch(API_URL);
-
       const result = await response.json();
 
       if (!response.ok) {
@@ -87,80 +62,50 @@ function Reports() {
         );
       }
 
-      if (result.success) {
-
-        setData(
-          Array.isArray(result.data)
-            ? result.data
-            : []
-        );
-
-      } else {
-
-        setData([]);
-
-      }
-
-    } catch (error) {
-
-      console.error(
-        "Reports Fetch Error:",
-        error
+      setData(
+        result.success && Array.isArray(result.data)
+          ? result.data
+          : []
       );
 
+    } catch (error) {
+      console.error("Reports Fetch Error:", error);
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
-
-  // =====================================================
-  // LOAD DATA
-  // =====================================================
-
   useEffect(() => {
-
     fetchProcedures();
-
   }, []);
 
-
   // =====================================================
-  // DYNAMIC STAFF NAMES
-  // =====================================================
-  // IMPORTANT:
-  // These names come directly from Procedure data.
-  // So whenever a new staff is added in Procedure,
-  // Reports will automatically show that name.
+  // STAFF NAMES
+  // EXACT SAME LIST AS PROCEDURE.JSX
   // =====================================================
 
-  const staffNames = useMemo(() => {
-
-    const names = data
-      .map((item) =>
-        String(item.staffName || "").trim()
-      )
-      .filter(Boolean);
-
-    return [...new Set(names)].sort(
-      (a, b) =>
-        a.localeCompare(
-          b,
-          "en",
-          {
-            sensitivity: "base",
-          }
-        )
-    );
-
-  }, [data]);
-
+  const staffNames = [
+    "Thiyagarajan",
+    "Renugadevi",
+    "Prathap",
+    "Venkateshan",
+    "Uma Devi",
+    "Rathinam",
+    "Bharani",
+    "Rani",
+    "Loganayaki",
+    "Chandralekha",
+    "Chinnasamy L",
+    "Muthulakshmi A",
+    "Agalya",
+    "Tamizharasi M",
+    "Ruckmani",
+    "Devika",
+    "Rajalakshmi K",
+  ];
 
   // =====================================================
-  // DYNAMIC BRANCH NAMES
+  // BRANCH NAMES
   // =====================================================
 
   const branchNames = useMemo(() => {
@@ -172,21 +117,13 @@ function Reports() {
       .filter(Boolean);
 
     return [...new Set(branches)].sort(
-      (a, b) =>
-        a.localeCompare(
-          b,
-          "en",
-          {
-            sensitivity: "base",
-          }
-        )
+      (a, b) => a.localeCompare(b)
     );
 
   }, [data]);
 
-
   // =====================================================
-  // DYNAMIC CHIT VALUES
+  // CHIT VALUES
   // =====================================================
 
   const chitValues = useMemo(() => {
@@ -205,9 +142,8 @@ function Reports() {
 
   }, [data]);
 
-
   // =====================================================
-  // HANDLE FILTER CHANGE
+  // HANDLE CHANGE
   // =====================================================
 
   const handleChange = (e) => {
@@ -221,25 +157,20 @@ function Reports() {
       ...previous,
       [name]: value,
     }));
-
   };
-
 
   // =====================================================
   // APPLY FILTER
   // =====================================================
 
   const applyFilters = () => {
-
     setAppliedFilters({
       ...filters,
     });
-
   };
 
-
   // =====================================================
-  // CLEAR FILTERS
+  // CLEAR FILTER
   // =====================================================
 
   const clearFilters = () => {
@@ -252,11 +183,8 @@ function Reports() {
     };
 
     setFilters(emptyFilters);
-
     setAppliedFilters(emptyFilters);
-
   };
-
 
   // =====================================================
   // FILTER DATA
@@ -264,38 +192,25 @@ function Reports() {
 
   const filteredData = data.filter((item) => {
 
-
-    // ---------------- BRANCH ----------------
-
     const branchMatch =
       !appliedFilters.branch ||
       String(item.branch || "").trim() ===
-      String(appliedFilters.branch).trim();
-
-
-    // ---------------- STAFF ----------------
+        String(appliedFilters.branch).trim();
 
     const staffMatch =
       !appliedFilters.staff ||
       String(item.staffName || "").trim() ===
-      String(appliedFilters.staff).trim();
-
-
-    // ---------------- DUE DAY ----------------
+        String(appliedFilters.staff).trim();
 
     const dueDayMatch =
       !appliedFilters.dueDay ||
       Number(item.dueDay) ===
-      Number(appliedFilters.dueDay);
-
-
-    // ---------------- CHIT VALUE ----------------
+        Number(appliedFilters.dueDay);
 
     const chitValueMatch =
       !appliedFilters.chitValue ||
       Number(item.chitValue) ===
-      Number(appliedFilters.chitValue);
-
+        Number(appliedFilters.chitValue);
 
     return (
       branchMatch &&
@@ -303,31 +218,22 @@ function Reports() {
       dueDayMatch &&
       chitValueMatch
     );
-
   });
 
-
   // =====================================================
-  // FORMAT CURRENCY
+  // FORMAT CHIT VALUE
   // =====================================================
 
   const formatCurrency = (value) => {
 
     const number = Number(value);
 
-    if (
-      Number.isNaN(number) ||
-      number === 0
-    ) {
+    if (Number.isNaN(number)) {
       return "₹0";
     }
 
-    return `₹${number.toLocaleString(
-      "en-IN"
-    )}`;
-
+    return `₹${number.toLocaleString("en-IN")}`;
   };
-
 
   // =====================================================
   // PRINT REPORT
@@ -342,17 +248,13 @@ function Reports() {
       );
 
       return;
-
     }
 
-
-    const printWindow =
-      window.open(
-        "",
-        "_blank",
-        "width=1200,height=800"
-      );
-
+    const printWindow = window.open(
+      "",
+      "_blank",
+      "width=1200,height=800"
+    );
 
     if (!printWindow) {
 
@@ -361,23 +263,12 @@ function Reports() {
       );
 
       return;
-
     }
-
-
-    // ===================================================
-    // TODAY'S DATE
-    // ===================================================
 
     const today =
       new Date().toLocaleDateString(
         "en-IN"
       );
-
-
-    // ===================================================
-    // FILTER SUMMARY
-    // ===================================================
 
     const branchText =
       appliedFilters.branch ||
@@ -398,21 +289,13 @@ function Reports() {
           )
         : "All Chit Values";
 
-
-    // ===================================================
-    // TABLE ROWS
-    // ===================================================
-
     const tableRows =
       filteredData
         .map(
           (item, index) => `
-
             <tr>
 
-              <td>
-                ${index + 1}
-              </td>
+              <td>${index + 1}</td>
 
               <td>
                 ${item.branch || "-"}
@@ -457,15 +340,9 @@ function Reports() {
               </td>
 
             </tr>
-
           `
         )
         .join("");
-
-
-    // ===================================================
-    // PRINT HTML
-    // ===================================================
 
     printWindow.document.write(`
 
@@ -479,34 +356,26 @@ function Reports() {
           SEYAL CHITS - Procedure Report
         </title>
 
-
         <style>
 
           * {
             box-sizing: border-box;
           }
 
-
           body {
-
             font-family:
               Arial,
               Helvetica,
               sans-serif;
 
             margin: 0;
-
             padding: 25px;
 
             color: #222;
-
             background: #fff;
-
           }
 
-
           .report-header {
-
             text-align: center;
 
             margin-bottom: 20px;
@@ -515,42 +384,29 @@ function Reports() {
               2px solid #222;
 
             padding-bottom: 15px;
-
           }
 
-
           .report-header h1 {
-
             margin: 0;
 
             font-size: 24px;
-
             font-weight: 700;
-
           }
 
-
           .report-header h2 {
-
             margin: 5px 0 0;
 
             font-size: 17px;
-
             font-weight: 600;
-
           }
 
-
           .report-date {
-
             margin-top: 7px;
 
             font-size: 13px;
 
             color: #555;
-
           }
-
 
           .filter-summary {
 
@@ -562,9 +418,7 @@ function Reports() {
             gap: 10px;
 
             margin-bottom: 18px;
-
           }
-
 
           .filter-box {
 
@@ -576,9 +430,7 @@ function Reports() {
             border-radius: 4px;
 
             font-size: 12px;
-
           }
-
 
           .filter-box strong {
 
@@ -589,9 +441,7 @@ function Reports() {
             font-size: 11px;
 
             color: #555;
-
           }
-
 
           .record-count {
 
@@ -600,9 +450,7 @@ function Reports() {
             font-size: 13px;
 
             font-weight: 600;
-
           }
-
 
           table {
 
@@ -611,9 +459,7 @@ function Reports() {
             border-collapse: collapse;
 
             font-size: 10px;
-
           }
-
 
           th {
 
@@ -622,9 +468,7 @@ function Reports() {
             font-weight: 700;
 
             text-align: left;
-
           }
-
 
           th,
           td {
@@ -635,9 +479,7 @@ function Reports() {
             padding: 7px 5px;
 
             vertical-align: top;
-
           }
-
 
           .footer {
 
@@ -648,36 +490,27 @@ function Reports() {
             font-size: 11px;
 
             color: #666;
-
           }
-
 
           @page {
 
             size: landscape;
 
             margin: 10mm;
-
           }
-
 
           @media print {
 
             body {
-
               padding: 0;
-
             }
-
           }
 
         </style>
 
       </head>
 
-
       <body>
-
 
         <div class="report-header">
 
@@ -697,7 +530,6 @@ function Reports() {
 
 
         <div class="filter-summary">
-
 
           <div class="filter-box">
 
@@ -742,7 +574,6 @@ function Reports() {
 
           </div>
 
-
         </div>
 
 
@@ -756,66 +587,31 @@ function Reports() {
 
         <table>
 
-
           <thead>
 
             <tr>
 
-              <th>
-                S.No
-              </th>
-
-              <th>
-                Branch
-              </th>
-
-              <th>
-                Staff Name
-              </th>
-
-              <th>
-                Customer Name
-              </th>
-
-              <th>
-                Chit Value
-              </th>
-
-              <th>
-                Key Lever
-              </th>
-
-              <th>
-                Follow-up
-              </th>
-
-              <th>
-                Due Day
-              </th>
-
-              <th>
-                Pay Mode
-              </th>
-
-              <th>
-                Collection Type
-              </th>
-
-              <th>
-                Remarks
-              </th>
+              <th>S.No</th>
+              <th>Branch</th>
+              <th>Staff Name</th>
+              <th>Customer Name</th>
+              <th>Chit Value</th>
+              <th>Key Lever</th>
+              <th>Follow-up</th>
+              <th>Due Day</th>
+              <th>Pay Mode</th>
+              <th>Collection Type</th>
+              <th>Remarks</th>
 
             </tr>
 
           </thead>
-
 
           <tbody>
 
             ${tableRows}
 
           </tbody>
-
 
         </table>
 
@@ -826,18 +622,14 @@ function Reports() {
 
         </div>
 
-
       </body>
 
       </html>
-
     `);
-
 
     printWindow.document.close();
 
     printWindow.focus();
-
 
     setTimeout(() => {
 
@@ -846,9 +638,7 @@ function Reports() {
       printWindow.close();
 
     }, 500);
-
   };
-
 
   // =====================================================
   // RETURN
@@ -858,10 +648,7 @@ function Reports() {
 
     <div className="reports-page">
 
-
-      {/* =================================================
-          HEADER
-      ================================================= */}
+      {/* HEADER */}
 
       <div className="reports-header">
 
@@ -877,7 +664,6 @@ function Reports() {
 
         </div>
 
-
         <div className="reports-header-icon">
 
           <FaChartBar />
@@ -887,13 +673,9 @@ function Reports() {
       </div>
 
 
-
-      {/* =================================================
-          FILTER CARD
-      ================================================= */}
+      {/* FILTER CARD */}
 
       <div className="reports-filter-card">
-
 
         <div className="filter-title">
 
@@ -902,7 +684,6 @@ function Reports() {
             <FaSearch />
 
           </div>
-
 
           <div>
 
@@ -919,17 +700,9 @@ function Reports() {
         </div>
 
 
-
-        {/* =================================================
-            FILTER ROW
-        ================================================= */}
-
         <div className="filters-row">
 
-
-          {/* =================================================
-              BRANCH
-          ================================================= */}
+          {/* BRANCH */}
 
           <div className="report-filter">
 
@@ -941,7 +714,6 @@ function Reports() {
 
             </label>
 
-
             <select
               name="branch"
               value={filters.branch}
@@ -951,7 +723,6 @@ function Reports() {
               <option value="">
                 All Branches
               </option>
-
 
               {branchNames.map(
                 (branch) => (
@@ -971,10 +742,7 @@ function Reports() {
           </div>
 
 
-
-          {/* =================================================
-              STAFF - DYNAMIC FROM PROCEDURE
-          ================================================= */}
+          {/* STAFF */}
 
           <div className="report-filter">
 
@@ -986,7 +754,6 @@ function Reports() {
 
             </label>
 
-
             <select
               name="staff"
               value={filters.staff}
@@ -996,7 +763,6 @@ function Reports() {
               <option value="">
                 All Staff
               </option>
-
 
               {staffNames.map(
                 (staff) => (
@@ -1016,10 +782,7 @@ function Reports() {
           </div>
 
 
-
-          {/* =================================================
-              DUE DAY
-          ================================================= */}
+          {/* DUE DAY */}
 
           <div className="report-filter">
 
@@ -1031,7 +794,6 @@ function Reports() {
 
             </label>
 
-
             <select
               name="dueDay"
               value={filters.dueDay}
@@ -1041,7 +803,6 @@ function Reports() {
               <option value="">
                 All Due Days
               </option>
-
 
               {Array.from(
                 { length: 31 },
@@ -1069,10 +830,7 @@ function Reports() {
           </div>
 
 
-
-          {/* =================================================
-              CHIT VALUE - DYNAMIC FROM PROCEDURE
-          ================================================= */}
+          {/* CHIT VALUE */}
 
           <div className="report-filter">
 
@@ -1084,7 +842,6 @@ function Reports() {
 
             </label>
 
-
             <select
               name="chitValue"
               value={filters.chitValue}
@@ -1094,7 +851,6 @@ function Reports() {
               <option value="">
                 All Chit Values
               </option>
-
 
               {chitValues.map(
                 (value) => (
@@ -1114,13 +870,9 @@ function Reports() {
           </div>
 
 
-
-          {/* =================================================
-              BUTTONS
-          ================================================= */}
+          {/* BUTTONS */}
 
           <div className="filter-buttons">
-
 
             <button
               type="button"
@@ -1161,22 +913,16 @@ function Reports() {
 
             </button>
 
-
           </div>
-
 
         </div>
 
       </div>
 
 
-
-      {/* =================================================
-          REPORT TABLE
-      ================================================= */}
+      {/* REPORT TABLE */}
 
       <div className="reports-table-card">
-
 
         <div className="table-header">
 
@@ -1192,7 +938,6 @@ function Reports() {
 
           </div>
 
-
           <div className="record-count">
 
             {filteredData.length} Records
@@ -1202,12 +947,9 @@ function Reports() {
         </div>
 
 
-
         <div className="table-wrapper">
 
-
           <table>
-
 
             <thead>
 
@@ -1264,7 +1006,6 @@ function Reports() {
 
             <tbody>
 
-
               {loading ? (
 
                 <tr>
@@ -1277,7 +1018,6 @@ function Reports() {
                     }}
                   >
                     Loading procedures...
-
                   </td>
 
                 </tr>
@@ -1296,11 +1036,9 @@ function Reports() {
 
                       </div>
 
-
                       <h3>
                         No Records Found
                       </h3>
-
 
                       <p>
                         No procedure entries match
@@ -1342,11 +1080,9 @@ function Reports() {
                       </td>
 
                       <td>
-
                         {formatCurrency(
                           item.chitValue
                         )}
-
                       </td>
 
                       <td>
@@ -1380,22 +1116,17 @@ function Reports() {
 
               )}
 
-
             </tbody>
 
           </table>
-
 
         </div>
 
       </div>
 
-
     </div>
 
   );
-
 }
-
 
 export default Reports;
