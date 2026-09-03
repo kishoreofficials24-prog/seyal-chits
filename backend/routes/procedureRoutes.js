@@ -3,7 +3,6 @@ const pool = require("../db");
 
 const router = express.Router();
 
-
 // =====================================================
 // SAVE PROCEDURE
 // POST /api/procedures
@@ -12,6 +11,7 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const {
+      joinedDate,
       branch,
       staffName,
       customerName,
@@ -24,7 +24,10 @@ router.post("/", async (req, res) => {
       remarks,
     } = req.body;
 
+    // ================= REQUIRED FIELD CHECK =================
+
     if (
+      !joinedDate ||
       !branch ||
       !staffName ||
       !customerName ||
@@ -41,10 +44,13 @@ router.post("/", async (req, res) => {
       });
     }
 
+    // ================= INSERT =================
+
     const [result] = await pool.query(
       `
       INSERT INTO procedures
       (
+        joined_date,
         branch,
         staff_name,
         customer_name,
@@ -56,9 +62,10 @@ router.post("/", async (req, res) => {
         collection_type,
         remarks
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
+        joinedDate,
         branch,
         staffName,
         customerName,
@@ -72,12 +79,13 @@ router.post("/", async (req, res) => {
       ]
     );
 
+    // ================= SUCCESS =================
+
     res.status(201).json({
       success: true,
       message: "Procedure saved successfully",
       id: result.insertId,
     });
-
   } catch (error) {
     console.error("Procedure Save Error:", error);
 
@@ -87,7 +95,6 @@ router.post("/", async (req, res) => {
     });
   }
 });
-
 
 // =====================================================
 // GET ALL PROCEDURES
@@ -100,6 +107,7 @@ router.get("/", async (req, res) => {
       `
       SELECT
         id,
+        DATE_FORMAT(joined_date, '%Y-%m-%d') AS joinedDate,
         branch,
         staff_name AS staffName,
         customer_name AS customerName,
@@ -120,7 +128,6 @@ router.get("/", async (req, res) => {
       success: true,
       data: rows,
     });
-
   } catch (error) {
     console.error("Procedure Fetch Error:", error);
 
@@ -130,7 +137,6 @@ router.get("/", async (req, res) => {
     });
   }
 });
-
 
 // =====================================================
 // UPDATE PROCEDURE
@@ -142,6 +148,7 @@ router.put("/:id", async (req, res) => {
     const { id } = req.params;
 
     const {
+      joinedDate,
       branch,
       staffName,
       customerName,
@@ -154,7 +161,10 @@ router.put("/:id", async (req, res) => {
       remarks,
     } = req.body;
 
+    // ================= REQUIRED FIELD CHECK =================
+
     if (
+      !joinedDate ||
       !branch ||
       !staffName ||
       !customerName ||
@@ -171,10 +181,13 @@ router.put("/:id", async (req, res) => {
       });
     }
 
+    // ================= UPDATE =================
+
     const [result] = await pool.query(
       `
       UPDATE procedures
       SET
+        joined_date = ?,
         branch = ?,
         staff_name = ?,
         customer_name = ?,
@@ -188,6 +201,7 @@ router.put("/:id", async (req, res) => {
       WHERE id = ?
       `,
       [
+        joinedDate,
         branch,
         staffName,
         customerName,
@@ -202,6 +216,8 @@ router.put("/:id", async (req, res) => {
       ]
     );
 
+    // ================= NOT FOUND =================
+
     if (result.affectedRows === 0) {
       return res.status(404).json({
         success: false,
@@ -209,11 +225,12 @@ router.put("/:id", async (req, res) => {
       });
     }
 
+    // ================= SUCCESS =================
+
     res.json({
       success: true,
       message: "Procedure updated successfully",
     });
-
   } catch (error) {
     console.error("Procedure Update Error:", error);
 
@@ -223,7 +240,6 @@ router.put("/:id", async (req, res) => {
     });
   }
 });
-
 
 // =====================================================
 // DELETE PROCEDURE
@@ -239,6 +255,8 @@ router.delete("/:id", async (req, res) => {
       [id]
     );
 
+    // ================= NOT FOUND =================
+
     if (result.affectedRows === 0) {
       return res.status(404).json({
         success: false,
@@ -246,11 +264,12 @@ router.delete("/:id", async (req, res) => {
       });
     }
 
+    // ================= SUCCESS =================
+
     res.json({
       success: true,
       message: "Procedure deleted successfully",
     });
-
   } catch (error) {
     console.error("Procedure Delete Error:", error);
 
@@ -260,6 +279,5 @@ router.delete("/:id", async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;
