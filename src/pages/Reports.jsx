@@ -359,7 +359,7 @@ function Reports() {
         chitValueMatch
       );
     });
-  }, [data, appliedFilters]);
+  }, [data, appliedFilters, getActiveDateRange]);
 
   // =====================================================
   // FORMAT CURRENCY
@@ -452,7 +452,7 @@ function Reports() {
     return `Date: ${getDateFilterLabel(
       appliedFilters
     )}`;
-  }, [appliedFilters]);
+  }, [appliedFilters, getDateFilterLabel]);
 
   // =====================================================
   // PRINT REPORT
@@ -863,51 +863,18 @@ function Reports() {
     <div className="dashboard">
       <aside className="sidebar">
         <div className="sidebar-logo-area">
-          <img
-            src="/logo.jpg.jpg"
-            alt="SEYAL CHITS"
-            className="sidebar-logo"
-          />
+          <img src="/logo.jpg.jpg" alt="SEYAL CHITS" className="sidebar-logo" />
         </div>
-
         <nav className="sidebar-menu">
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              `menu-item ${isActive ? "active" : ""}`
-            }
-          >
-            <FaHome />
-            <span>Dashboard</span>
-          </NavLink>
-
-          <NavLink
-            to="/procedure"
-            className={({ isActive }) =>
-              `menu-item ${isActive ? "active" : ""}`
-            }
-          >
-            <FaClipboardList />
-            <span>Procedure</span>
-          </NavLink>
-
-          <NavLink
-            to="/reports"
-            className={({ isActive }) =>
-              `menu-item ${isActive ? "active" : ""}`
-            }
-          >
-            <FaChartBar />
-            <span>Reports</span>
-          </NavLink>
+          <NavLink to="/dashboard" className={({ isActive }) => `menu-item ${isActive ? "active" : ""}`}><FaHome /><span>Dashboard</span></NavLink>
+          <NavLink to="/procedure" className={({ isActive }) => `menu-item ${isActive ? "active" : ""}`}><FaClipboardList /><span>Procedure</span></NavLink>
+          <NavLink to="/reports" className={({ isActive }) => `menu-item ${isActive ? "active" : ""}`}><FaChartBar /><span>Reports</span></NavLink>
         </nav>
-
         <div className="sidebar-footer">
           <strong>SEYAL CHITS</strong>
           <span>சேமிப்பே மாற்றம்!</span>
         </div>
       </aside>
-
       <main className="main-content">
         <div className="reports-page">
 
