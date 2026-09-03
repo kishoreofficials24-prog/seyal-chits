@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 import {
+  FaHome,
+  FaChartBar,
   FaClipboardList,
   FaBuilding,
   FaUser,
@@ -20,6 +23,7 @@ import {
 } from "react-icons/fa";
 
 import "./Procedure.css";
+import "./Dashboard.css";
 
 
 const API_URL =
@@ -33,6 +37,7 @@ function Procedure() {
   // =====================================================
 
   const [formData, setFormData] = useState({
+    joinedDate: new Date().toISOString().split("T")[0],
     branch: "",
     staffName: "",
     customerName: "",
@@ -64,6 +69,7 @@ function Procedure() {
   const handleReset = () => {
 
     setFormData({
+      joinedDate: new Date().toISOString().split("T")[0],
       branch: "",
       staffName: "",
       customerName: "",
@@ -249,6 +255,7 @@ function Procedure() {
     setEditingId(procedure.id);
 
     setFormData({
+      joinedDate: procedure.joinedDate ? String(procedure.joinedDate).slice(0, 10) : "",
       branch: procedure.branch || "",
       staffName: procedure.staffName || "",
       customerName: procedure.customerName || "",
@@ -371,6 +378,59 @@ function Procedure() {
 
   return (
 
+    <div className="dashboard">
+
+      <aside className="sidebar">
+
+        <div className="sidebar-logo-area">
+          <img
+            src="/logo.jpg.jpg"
+            alt="SEYAL CHITS"
+            className="sidebar-logo"
+          />
+        </div>
+
+        <nav className="sidebar-menu">
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              `menu-item ${isActive ? "active" : ""}`
+            }
+          >
+            <FaHome />
+            <span>Dashboard</span>
+          </NavLink>
+
+          <NavLink
+            to="/procedure"
+            className={({ isActive }) =>
+              `menu-item ${isActive ? "active" : ""}`
+            }
+          >
+            <FaClipboardList />
+            <span>Procedure</span>
+          </NavLink>
+
+          <NavLink
+            to="/reports"
+            className={({ isActive }) =>
+              `menu-item ${isActive ? "active" : ""}`
+            }
+          >
+            <FaChartBar />
+            <span>Reports</span>
+          </NavLink>
+        </nav>
+
+        <div className="sidebar-footer">
+          <strong>SEYAL CHITS</strong>
+          <span>சேமிப்பே மாற்றம்!</span>
+        </div>
+
+      </aside>
+
+      <main className="main-content">
+
     <div className="procedure-page">
 
 
@@ -453,6 +513,29 @@ function Procedure() {
           ================================================= */}
 
           <div className="form-grid">
+
+
+            {/* JOINED DATE */}
+
+            <div className="form-group">
+
+              <label>
+
+                <FaCalendarAlt />
+
+                Date
+
+              </label>
+
+              <input
+                type="date"
+                name="joinedDate"
+                value={formData.joinedDate}
+                onChange={handleChange}
+                required
+              />
+
+            </div>
 
 
             {/* BRANCH */}
@@ -1171,6 +1254,10 @@ function Procedure() {
                     </th>
 
                     <th style={tableHeaderStyle}>
+                      Date
+                    </th>
+
+                    <th style={tableHeaderStyle}>
                       Branch
                     </th>
 
@@ -1226,6 +1313,12 @@ function Procedure() {
 
                         <td style={tableCellStyle}>
                           {index + 1}
+                        </td>
+
+                        <td style={tableCellStyle}>
+                          {procedure.joinedDate
+                            ? new Date(procedure.joinedDate).toLocaleDateString("en-IN")
+                            : "-"}
                         </td>
 
                         <td style={tableCellStyle}>
@@ -1357,6 +1450,9 @@ function Procedure() {
 
       </div>
 
+    </div>
+
+      </main>
 
     </div>
 
