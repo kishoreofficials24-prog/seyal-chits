@@ -20,6 +20,82 @@ import "./Dashboard.css";
 const API_URL =
   "https://seyal-chits-backend.onrender.com/api/procedures";
 
+function getLocalDateString(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getJoinedDate(item) {
+  if (!item.joinedDate) return "";
+  return String(item.joinedDate).slice(0, 10);
+}
+
+function getFirstDayOfMonth() {
+  const today = new Date();
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-01`;
+}
+
+function getLastDayOfMonth() {
+  const today = new Date();
+  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  return getLocalDateString(lastDay);
+}
+
+function getFirstDayOfYear() {
+  return `${new Date().getFullYear()}-01-01`;
+}
+
+function getLastDayOfYear() {
+  return `${new Date().getFullYear()}-12-31`;
+}
+
+function getActiveDateRange(filterData) {
+  const todayString = getLocalDateString();
+
+  switch (filterData.dateFilter) {
+    case "today":
+      return { from: todayString, to: todayString };
+    case "thisMonth":
+      return { from: getFirstDayOfMonth(), to: getLastDayOfMonth() };
+    case "thisYear":
+      return { from: getFirstDayOfYear(), to: getLastDayOfYear() };
+    case "range":
+      return { from: filterData.dateFrom, to: filterData.dateTo };
+    default:
+      return { from: "", to: "" };
+  }
+}
+
+function formatDate(value) {
+  if (!value) return "-";
+  const cleanDate = String(value).slice(0, 10);
+  const date = new Date(`${cleanDate}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleDateString("en-IN");
+}
+
+function getDateFilterLabel(filterData) {
+  switch (filterData.dateFilter) {
+    case "today":
+      return "Today";
+    case "thisMonth":
+      return "This Month";
+    case "thisYear":
+      return "This Year";
+    case "range":
+      if (filterData.dateFrom && filterData.dateTo) {
+        return `${formatDate(filterData.dateFrom)} - ${formatDate(filterData.dateTo)}`;
+      }
+      if (filterData.dateFrom) return `From ${formatDate(filterData.dateFrom)}`;
+      if (filterData.dateTo) return `Up to ${formatDate(filterData.dateTo)}`;
+      return "Date Range";
+    default:
+      return "All Dates";
+  }
+}
+
 function Reports() {
   // =====================================================
   // DATA
@@ -139,64 +215,6 @@ function Reports() {
   }, [data]);
 
   // =====================================================
-  // DATE HELPERS
-  // =====================================================
-
-  const getLocalDateString = (date = new Date()) => {
-    const year = date.getFullYear();
-
-    const month = String(
-      date.getMonth() + 1
-    ).padStart(2, "0");
-
-    const day = String(
-      date.getDate()
-    ).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  };
-
-  const getJoinedDate = (item) => {
-    if (!item.joinedDate) {
-      return "";
-    }
-
-    return String(item.joinedDate).slice(0, 10);
-  };
-
-  const getFirstDayOfMonth = () => {
-    const today = new Date();
-
-    return `${today.getFullYear()}-${String(
-      today.getMonth() + 1
-    ).padStart(2, "0")}-01`;
-  };
-
-  const getLastDayOfMonth = () => {
-    const today = new Date();
-
-    const lastDay = new Date(
-      today.getFullYear(),
-      today.getMonth() + 1,
-      0
-    );
-
-    return getLocalDateString(lastDay);
-  };
-
-  const getFirstDayOfYear = () => {
-    const today = new Date();
-
-    return `${today.getFullYear()}-01-01`;
-  };
-
-  const getLastDayOfYear = () => {
-    const today = new Date();
-
-    return `${today.getFullYear()}-12-31`;
-  };
-
-  // =====================================================
   // HANDLE FILTER CHANGE
   // =====================================================
 
@@ -226,49 +244,6 @@ function Reports() {
   const clearFilters = () => {
     setFilters(emptyFilters);
     setAppliedFilters(emptyFilters);
-  };
-
-  // =====================================================
-  // GET ACTIVE DATE RANGE
-  // =====================================================
-
-  const getActiveDateRange = (filterData) => {
-    const today = new Date();
-
-    const todayString =
-      getLocalDateString(today);
-
-    switch (filterData.dateFilter) {
-      case "today":
-        return {
-          from: todayString,
-          to: todayString,
-        };
-
-      case "thisMonth":
-        return {
-          from: getFirstDayOfMonth(),
-          to: getLastDayOfMonth(),
-        };
-
-      case "thisYear":
-        return {
-          from: getFirstDayOfYear(),
-          to: getLastDayOfYear(),
-        };
-
-      case "range":
-        return {
-          from: filterData.dateFrom,
-          to: filterData.dateTo,
-        };
-
-      default:
-        return {
-          from: "",
-          to: "",
-        };
-    }
   };
 
   // =====================================================
@@ -359,7 +334,7 @@ function Reports() {
         chitValueMatch
       );
     });
-  }, [data, appliedFilters, getActiveDateRange]);
+  }, [data, appliedFilters]);
 
   // =====================================================
   // FORMAT CURRENCY
@@ -376,75 +351,6 @@ function Reports() {
   };
 
   // =====================================================
-  // FORMAT DATE
-  // =====================================================
-
-  const formatDate = (value) => {
-    if (!value) {
-      return "-";
-    }
-
-    const cleanDate =
-      String(value).slice(0, 10);
-
-    const date = new Date(
-      `${cleanDate}T00:00:00`
-    );
-
-    if (Number.isNaN(date.getTime())) {
-      return "-";
-    }
-
-    return date.toLocaleDateString("en-IN");
-  };
-
-  // =====================================================
-  // DATE FILTER LABEL
-  // =====================================================
-
-  const getDateFilterLabel = (filterData) => {
-    switch (filterData.dateFilter) {
-      case "today":
-        return "Today";
-
-      case "thisMonth":
-        return "This Month";
-
-      case "thisYear":
-        return "This Year";
-
-      case "range":
-        if (
-          filterData.dateFrom &&
-          filterData.dateTo
-        ) {
-          return `${formatDate(
-            filterData.dateFrom
-          )} - ${formatDate(
-            filterData.dateTo
-          )}`;
-        }
-
-        if (filterData.dateFrom) {
-          return `From ${formatDate(
-            filterData.dateFrom
-          )}`;
-        }
-
-        if (filterData.dateTo) {
-          return `Up to ${formatDate(
-            filterData.dateTo
-          )}`;
-        }
-
-        return "Date Range";
-
-      default:
-        return "All Dates";
-    }
-  };
-
-  // =====================================================
   // REPORT PERIOD TEXT
   // =====================================================
 
@@ -452,7 +358,7 @@ function Reports() {
     return `Date: ${getDateFilterLabel(
       appliedFilters
     )}`;
-  }, [appliedFilters, getDateFilterLabel]);
+  }, [appliedFilters]);
 
   // =====================================================
   // PRINT REPORT
