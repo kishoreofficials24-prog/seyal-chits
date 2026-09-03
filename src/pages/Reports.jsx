@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 import {
+  FaHome,
   FaChartBar,
   FaBuilding,
   FaUser,
@@ -13,37 +15,37 @@ import {
 } from "react-icons/fa";
 
 import "./Reports.css";
+import "./Dashboard.css";
 
 const API_URL =
   "https://seyal-chits-backend.onrender.com/api/procedures";
 
 function Reports() {
-
   // =====================================================
-  // ALL PROCEDURE DATA
+  // DATA
   // =====================================================
 
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // =====================================================
   // FILTERS
   // =====================================================
 
-  const [filters, setFilters] = useState({
+  const emptyFilters = {
+    dateFilter: "all",
+    dateFrom: "",
+    dateTo: "",
     branch: "",
     staff: "",
     dueDay: "",
     chitValue: "",
-  });
+  };
 
-  const [appliedFilters, setAppliedFilters] = useState({
-    branch: "",
-    staff: "",
-    dueDay: "",
-    chitValue: "",
-  });
+  const [filters, setFilters] = useState(emptyFilters);
 
-  const [loading, setLoading] = useState(false);
+  const [appliedFilters, setAppliedFilters] =
+    useState(emptyFilters);
 
   // =====================================================
   // FETCH PROCEDURES
@@ -54,6 +56,7 @@ function Reports() {
       setLoading(true);
 
       const response = await fetch(API_URL);
+
       const result = await response.json();
 
       if (!response.ok) {
@@ -67,7 +70,6 @@ function Reports() {
           ? result.data
           : []
       );
-
     } catch (error) {
       console.error("Reports Fetch Error:", error);
     } finally {
@@ -80,8 +82,7 @@ function Reports() {
   }, []);
 
   // =====================================================
-  // STAFF NAMES
-  // EXACT SAME LIST AS PROCEDURE.JSX
+  // STAFF
   // =====================================================
 
   const staffNames = [
@@ -105,21 +106,19 @@ function Reports() {
   ];
 
   // =====================================================
-  // BRANCH NAMES
+  // BRANCHES
   // =====================================================
 
   const branchNames = useMemo(() => {
-
     const branches = data
       .map((item) =>
         String(item.branch || "").trim()
       )
       .filter(Boolean);
 
-    return [...new Set(branches)].sort(
-      (a, b) => a.localeCompare(b)
+    return [...new Set(branches)].sort((a, b) =>
+      a.localeCompare(b)
     );
-
   }, [data]);
 
   // =====================================================
@@ -127,31 +126,82 @@ function Reports() {
   // =====================================================
 
   const chitValues = useMemo(() => {
-
     const values = data
       .map((item) => Number(item.chitValue))
       .filter(
         (value) =>
-          !Number.isNaN(value) &&
-          value > 0
+          !Number.isNaN(value) && value > 0
       );
 
     return [...new Set(values)].sort(
       (a, b) => a - b
     );
-
   }, [data]);
 
   // =====================================================
-  // HANDLE CHANGE
+  // DATE HELPERS
+  // =====================================================
+
+  const getLocalDateString = (date = new Date()) => {
+    const year = date.getFullYear();
+
+    const month = String(
+      date.getMonth() + 1
+    ).padStart(2, "0");
+
+    const day = String(
+      date.getDate()
+    ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
+  const getJoinedDate = (item) => {
+    if (!item.joinedDate) {
+      return "";
+    }
+
+    return String(item.joinedDate).slice(0, 10);
+  };
+
+  const getFirstDayOfMonth = () => {
+    const today = new Date();
+
+    return `${today.getFullYear()}-${String(
+      today.getMonth() + 1
+    ).padStart(2, "0")}-01`;
+  };
+
+  const getLastDayOfMonth = () => {
+    const today = new Date();
+
+    const lastDay = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      0
+    );
+
+    return getLocalDateString(lastDay);
+  };
+
+  const getFirstDayOfYear = () => {
+    const today = new Date();
+
+    return `${today.getFullYear()}-01-01`;
+  };
+
+  const getLastDayOfYear = () => {
+    const today = new Date();
+
+    return `${today.getFullYear()}-12-31`;
+  };
+
+  // =====================================================
+  // HANDLE FILTER CHANGE
   // =====================================================
 
   const handleChange = (e) => {
-
-    const {
-      name,
-      value,
-    } = e.target;
+    const { name, value } = e.target;
 
     setFilters((previous) => ({
       ...previous,
@@ -160,7 +210,7 @@ function Reports() {
   };
 
   // =====================================================
-  // APPLY FILTER
+  // APPLY FILTERS
   // =====================================================
 
   const applyFilters = () => {
@@ -170,62 +220,152 @@ function Reports() {
   };
 
   // =====================================================
-  // CLEAR FILTER
+  // CLEAR FILTERS
   // =====================================================
 
   const clearFilters = () => {
-
-    const emptyFilters = {
-      branch: "",
-      staff: "",
-      dueDay: "",
-      chitValue: "",
-    };
-
     setFilters(emptyFilters);
     setAppliedFilters(emptyFilters);
+  };
+
+  // =====================================================
+  // GET ACTIVE DATE RANGE
+  // =====================================================
+
+  const getActiveDateRange = (filterData) => {
+    const today = new Date();
+
+    const todayString =
+      getLocalDateString(today);
+
+    switch (filterData.dateFilter) {
+      case "today":
+        return {
+          from: todayString,
+          to: todayString,
+        };
+
+      case "thisMonth":
+        return {
+          from: getFirstDayOfMonth(),
+          to: getLastDayOfMonth(),
+        };
+
+      case "thisYear":
+        return {
+          from: getFirstDayOfYear(),
+          to: getLastDayOfYear(),
+        };
+
+      case "range":
+        return {
+          from: filterData.dateFrom,
+          to: filterData.dateTo,
+        };
+
+      default:
+        return {
+          from: "",
+          to: "",
+        };
+    }
   };
 
   // =====================================================
   // FILTER DATA
   // =====================================================
 
-  const filteredData = data.filter((item) => {
+  const filteredData = useMemo(() => {
+    const dateRange =
+      getActiveDateRange(appliedFilters);
 
-    const branchMatch =
-      !appliedFilters.branch ||
-      String(item.branch || "").trim() ===
-        String(appliedFilters.branch).trim();
+    return data.filter((item) => {
+      const itemDate = getJoinedDate(item);
 
-    const staffMatch =
-      !appliedFilters.staff ||
-      String(item.staffName || "").trim() ===
-        String(appliedFilters.staff).trim();
+      // -----------------------------------------------
+      // DATE FILTER
+      // -----------------------------------------------
 
-    const dueDayMatch =
-      !appliedFilters.dueDay ||
-      Number(item.dueDay) ===
-        Number(appliedFilters.dueDay);
+      let dateMatch = true;
 
-    const chitValueMatch =
-      !appliedFilters.chitValue ||
-      Number(item.chitValue) ===
-        Number(appliedFilters.chitValue);
+      if (
+        dateRange.from ||
+        dateRange.to
+      ) {
+        if (!itemDate) {
+          dateMatch = false;
+        } else {
+          if (
+            dateRange.from &&
+            itemDate < dateRange.from
+          ) {
+            dateMatch = false;
+          }
 
-    return (
-      branchMatch &&
-      staffMatch &&
-      dueDayMatch &&
-      chitValueMatch
-    );
-  });
+          if (
+            dateRange.to &&
+            itemDate > dateRange.to
+          ) {
+            dateMatch = false;
+          }
+        }
+      }
+
+      // -----------------------------------------------
+      // BRANCH
+      // -----------------------------------------------
+
+      const branchMatch =
+        !appliedFilters.branch ||
+        String(item.branch || "").trim() ===
+          String(
+            appliedFilters.branch
+          ).trim();
+
+      // -----------------------------------------------
+      // STAFF
+      // -----------------------------------------------
+
+      const staffMatch =
+        !appliedFilters.staff ||
+        String(item.staffName || "").trim() ===
+          String(
+            appliedFilters.staff
+          ).trim();
+
+      // -----------------------------------------------
+      // DUE DAY
+      // -----------------------------------------------
+
+      const dueDayMatch =
+        !appliedFilters.dueDay ||
+        Number(item.dueDay) ===
+          Number(appliedFilters.dueDay);
+
+      // -----------------------------------------------
+      // CHIT VALUE
+      // -----------------------------------------------
+
+      const chitValueMatch =
+        !appliedFilters.chitValue ||
+        Number(item.chitValue) ===
+          Number(appliedFilters.chitValue);
+
+      return (
+        dateMatch &&
+        branchMatch &&
+        staffMatch &&
+        dueDayMatch &&
+        chitValueMatch
+      );
+    });
+  }, [data, appliedFilters]);
 
   // =====================================================
-  // FORMAT CHIT VALUE
+  // FORMAT CURRENCY
   // =====================================================
 
   const formatCurrency = (value) => {
-
     const number = Number(value);
 
     if (Number.isNaN(number)) {
@@ -236,13 +376,90 @@ function Reports() {
   };
 
   // =====================================================
+  // FORMAT DATE
+  // =====================================================
+
+  const formatDate = (value) => {
+    if (!value) {
+      return "-";
+    }
+
+    const cleanDate =
+      String(value).slice(0, 10);
+
+    const date = new Date(
+      `${cleanDate}T00:00:00`
+    );
+
+    if (Number.isNaN(date.getTime())) {
+      return "-";
+    }
+
+    return date.toLocaleDateString("en-IN");
+  };
+
+  // =====================================================
+  // DATE FILTER LABEL
+  // =====================================================
+
+  const getDateFilterLabel = (filterData) => {
+    switch (filterData.dateFilter) {
+      case "today":
+        return "Today";
+
+      case "thisMonth":
+        return "This Month";
+
+      case "thisYear":
+        return "This Year";
+
+      case "range":
+        if (
+          filterData.dateFrom &&
+          filterData.dateTo
+        ) {
+          return `${formatDate(
+            filterData.dateFrom
+          )} - ${formatDate(
+            filterData.dateTo
+          )}`;
+        }
+
+        if (filterData.dateFrom) {
+          return `From ${formatDate(
+            filterData.dateFrom
+          )}`;
+        }
+
+        if (filterData.dateTo) {
+          return `Up to ${formatDate(
+            filterData.dateTo
+          )}`;
+        }
+
+        return "Date Range";
+
+      default:
+        return "All Dates";
+    }
+  };
+
+  // =====================================================
+  // REPORT PERIOD TEXT
+  // =====================================================
+
+  const reportPeriodText = useMemo(() => {
+    return `Date: ${getDateFilterLabel(
+      appliedFilters
+    )}`;
+  }, [appliedFilters]);
+
+  // =====================================================
   // PRINT REPORT
   // =====================================================
 
   const handlePrint = () => {
-
     if (filteredData.length === 0) {
-
       alert(
         "No records available to print."
       );
@@ -253,11 +470,10 @@ function Reports() {
     const printWindow = window.open(
       "",
       "_blank",
-      "width=1200,height=800"
+      "width=1400,height=900"
     );
 
     if (!printWindow) {
-
       alert(
         "Please allow pop-ups to print the report."
       );
@@ -265,87 +481,98 @@ function Reports() {
       return;
     }
 
-    const today =
+    // Actual date when print button is clicked
+    const printDate =
       new Date().toLocaleDateString(
         "en-IN"
       );
 
-    const branchText =
+    const dateFilterText =
+      getDateFilterLabel(
+        appliedFilters
+      );
+
+    const filterBranch =
       appliedFilters.branch ||
       "All Branches";
 
-    const staffText =
+    const filterStaff =
       appliedFilters.staff ||
       "All Staff";
 
-    const dueDayText =
+    const filterDueDay =
       appliedFilters.dueDay ||
       "All Due Days";
 
-    const chitValueText =
+    const filterChitValue =
       appliedFilters.chitValue
         ? formatCurrency(
             appliedFilters.chitValue
           )
         : "All Chit Values";
 
-    const tableRows =
-      filteredData
-        .map(
-          (item, index) => `
-            <tr>
+    const tableRows = filteredData
+      .map(
+        (item, index) => `
+          <tr>
+            <td>${index + 1}</td>
 
-              <td>${index + 1}</td>
+            <td>
+              ${formatDate(
+                item.joinedDate
+              )}
+            </td>
 
-              <td>
-                ${item.branch || "-"}
-              </td>
+            <td>
+              ${item.branch || "-"}
+            </td>
 
-              <td>
-                ${item.staffName || "-"}
-              </td>
+            <td>
+              ${item.staffName || "-"}
+            </td>
 
-              <td>
-                ${item.customerName || "-"}
-              </td>
+            <td>
+              ${item.customerName || "-"}
+            </td>
 
-              <td>
-                ${formatCurrency(
-                  item.chitValue
-                )}
-              </td>
+            <td>
+              ${formatCurrency(
+                item.chitValue
+              )}
+            </td>
 
-              <td>
-                ${item.keyLever || "-"}
-              </td>
+            <td>
+              ${item.keyLever || "-"}
+            </td>
 
-              <td>
-                ${item.followUp ?? "-"}
-              </td>
+            <td>
+              ${item.followUp ?? "-"}
+            </td>
 
-              <td>
-                ${item.dueDay || "-"}
-              </td>
+            <td>
+              ${item.dueDay || "-"}
+            </td>
 
-              <td>
-                ${item.payMode || "-"}
-              </td>
+            <td>
+              ${item.payMode || "-"}
+            </td>
 
-              <td>
-                ${item.collectionType || "-"}
-              </td>
+            <td>
+              ${
+                item.collectionType ||
+                "-"
+              }
+            </td>
 
-              <td>
-                ${item.remarks || "-"}
-              </td>
-
-            </tr>
-          `
-        )
-        .join("");
+            <td>
+              ${item.remarks || "-"}
+            </td>
+          </tr>
+        `
+      )
+      .join("");
 
     printWindow.document.write(`
-
       <!DOCTYPE html>
 
       <html>
@@ -372,138 +599,134 @@ function Reports() {
             padding: 25px;
 
             color: #222;
+
             background: #fff;
           }
 
-          .report-header {
+          .header {
             text-align: center;
-
-            margin-bottom: 20px;
 
             border-bottom:
               2px solid #222;
 
-            padding-bottom: 15px;
-          }
-
-          .report-header h1 {
-            margin: 0;
-
-            font-size: 24px;
-            font-weight: 700;
-          }
-
-          .report-header h2 {
-            margin: 5px 0 0;
-
-            font-size: 17px;
-            font-weight: 600;
-          }
-
-          .report-date {
-            margin-top: 7px;
-
-            font-size: 13px;
-
-            color: #555;
-          }
-
-          .filter-summary {
-
-            display: grid;
-
-            grid-template-columns:
-              repeat(4, 1fr);
-
-            gap: 10px;
+            padding-bottom: 14px;
 
             margin-bottom: 18px;
           }
 
-          .filter-box {
+          .header h1 {
+            margin: 0;
 
-            border:
-              1px solid #ccc;
-
-            padding: 8px 10px;
-
-            border-radius: 4px;
-
-            font-size: 12px;
+            font-size: 26px;
           }
 
-          .filter-box strong {
+          .header h2 {
+            margin: 6px 0 0;
 
-            display: block;
+            font-size: 18px;
+          }
 
-            margin-bottom: 3px;
+          .print-date {
+            margin-top: 7px;
 
-            font-size: 11px;
+            font-size: 12px;
 
             color: #555;
           }
 
-          .record-count {
+          .period {
+            text-align: center;
 
-            margin-bottom: 10px;
+            margin-bottom: 15px;
 
-            font-size: 13px;
+            font-size: 15px;
 
-            font-weight: 600;
+            font-weight: 700;
+          }
+
+          .summary {
+            display: grid;
+
+            grid-template-columns:
+              repeat(5, 1fr);
+
+            gap: 8px;
+
+            margin-bottom: 18px;
+          }
+
+          .summary-box {
+            border:
+              1px solid #ccc;
+
+            padding: 9px;
+
+            border-radius: 4px;
+
+            font-size: 11px;
+          }
+
+          .summary-box strong {
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: #555;
+
+            font-size: 10px;
+          }
+
+          .joined-count {
+            margin-bottom: 12px;
+
+            padding: 10px;
+
+            border:
+              1px solid #bbb;
+
+            font-size: 14px;
+
+            font-weight: 700;
           }
 
           table {
-
             width: 100%;
 
-            border-collapse: collapse;
+            border-collapse:
+              collapse;
 
             font-size: 10px;
           }
 
           th {
-
             background: #f1f1f1;
 
             font-weight: 700;
-
-            text-align: left;
           }
 
           th,
           td {
-
             border:
-              1px solid #999;
+              1px solid #ccc;
 
-            padding: 7px 5px;
+            padding: 7px;
+
+            text-align: left;
 
             vertical-align: top;
           }
 
-          .footer {
-
-            margin-top: 20px;
-
-            text-align: right;
-
-            font-size: 11px;
-
-            color: #666;
-          }
-
-          @page {
-
-            size: landscape;
-
-            margin: 10mm;
+          tr {
+            page-break-inside:
+              avoid;
           }
 
           @media print {
 
             body {
-              padding: 0;
+              padding: 10px;
             }
+
           }
 
         </style>
@@ -512,7 +735,7 @@ function Reports() {
 
       <body>
 
-        <div class="report-header">
+        <div class="header">
 
           <h1>
             SEYAL CHITS
@@ -522,64 +745,52 @@ function Reports() {
             Procedure Report
           </h2>
 
-          <div class="report-date">
-            Report Date: ${today}
+          <div class="print-date">
+            Report Printed Date:
+            ${printDate}
           </div>
 
         </div>
 
 
-        <div class="filter-summary">
+        <div class="period">
+          ${reportPeriodText}
+        </div>
 
-          <div class="filter-box">
 
-            <strong>
-              BRANCH
-            </strong>
+        <div class="summary">
 
-            ${branchText}
-
+          <div class="summary-box">
+            <strong>DATE FILTER</strong>
+            ${dateFilterText}
           </div>
 
-
-          <div class="filter-box">
-
-            <strong>
-              STAFF
-            </strong>
-
-            ${staffText}
-
+          <div class="summary-box">
+            <strong>BRANCH</strong>
+            ${filterBranch}
           </div>
 
-
-          <div class="filter-box">
-
-            <strong>
-              DUE DAY
-            </strong>
-
-            ${dueDayText}
-
+          <div class="summary-box">
+            <strong>STAFF</strong>
+            ${filterStaff}
           </div>
 
+          <div class="summary-box">
+            <strong>DUE DAY</strong>
+            ${filterDueDay}
+          </div>
 
-          <div class="filter-box">
-
-            <strong>
-              CHIT VALUE
-            </strong>
-
-            ${chitValueText}
-
+          <div class="summary-box">
+            <strong>CHIT VALUE</strong>
+            ${filterChitValue}
           </div>
 
         </div>
 
 
-        <div class="record-count">
+        <div class="joined-count">
 
-          Total Records:
+          Total Joined:
           ${filteredData.length}
 
         </div>
@@ -592,15 +803,27 @@ function Reports() {
             <tr>
 
               <th>S.No</th>
+
+              <th>Date</th>
+
               <th>Branch</th>
+
               <th>Staff Name</th>
+
               <th>Customer Name</th>
+
               <th>Chit Value</th>
+
               <th>Key Lever</th>
+
               <th>Follow-up</th>
+
               <th>Due Day</th>
+
               <th>Pay Mode</th>
+
               <th>Collection Type</th>
+
               <th>Remarks</th>
 
             </tr>
@@ -616,11 +839,13 @@ function Reports() {
         </table>
 
 
-        <div class="footer">
+        <script>
 
-          Generated on ${today}
+          window.onload = function () {
+            window.print();
+          };
 
-        </div>
+        </script>
 
       </body>
 
@@ -628,16 +853,6 @@ function Reports() {
     `);
 
     printWindow.document.close();
-
-    printWindow.focus();
-
-    setTimeout(() => {
-
-      printWindow.print();
-
-      printWindow.close();
-
-    }, 500);
   };
 
   // =====================================================
@@ -645,10 +860,60 @@ function Reports() {
   // =====================================================
 
   return (
+    <div className="dashboard">
+      <aside className="sidebar">
+        <div className="sidebar-logo-area">
+          <img
+            src="/logo.jpg.jpg"
+            alt="SEYAL CHITS"
+            className="sidebar-logo"
+          />
+        </div>
 
-    <div className="reports-page">
+        <nav className="sidebar-menu">
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              `menu-item ${isActive ? "active" : ""}`
+            }
+          >
+            <FaHome />
+            <span>Dashboard</span>
+          </NavLink>
 
-      {/* HEADER */}
+          <NavLink
+            to="/procedure"
+            className={({ isActive }) =>
+              `menu-item ${isActive ? "active" : ""}`
+            }
+          >
+            <FaClipboardList />
+            <span>Procedure</span>
+          </NavLink>
+
+          <NavLink
+            to="/reports"
+            className={({ isActive }) =>
+              `menu-item ${isActive ? "active" : ""}`
+            }
+          >
+            <FaChartBar />
+            <span>Reports</span>
+          </NavLink>
+        </nav>
+
+        <div className="sidebar-footer">
+          <strong>SEYAL CHITS</strong>
+          <span>சேமிப்பே மாற்றம்!</span>
+        </div>
+      </aside>
+
+      <main className="main-content">
+        <div className="reports-page">
+
+      {/* =================================================
+          HEADER
+      ================================================= */}
 
       <div className="reports-header">
 
@@ -664,6 +929,7 @@ function Reports() {
 
         </div>
 
+
         <div className="reports-header-icon">
 
           <FaChartBar />
@@ -673,7 +939,9 @@ function Reports() {
       </div>
 
 
-      {/* FILTER CARD */}
+      {/* =================================================
+          FILTER CARD
+      ================================================= */}
 
       <div className="reports-filter-card">
 
@@ -685,6 +953,7 @@ function Reports() {
 
           </div>
 
+
           <div>
 
             <h2>
@@ -692,7 +961,7 @@ function Reports() {
             </h2>
 
             <p>
-              Choose one or multiple filters
+              Choose date period and other filters
             </p>
 
           </div>
@@ -702,7 +971,122 @@ function Reports() {
 
         <div className="filters-row">
 
-          {/* BRANCH */}
+          {/* =================================================
+              DATE FILTER
+          ================================================= */}
+
+          <div className="report-filter">
+
+            <label>
+
+              <FaCalendarAlt />
+
+              Date
+
+            </label>
+
+
+            <select
+              name="dateFilter"
+              value={
+                filters.dateFilter
+              }
+              onChange={
+                handleChange
+              }
+            >
+
+              <option value="all">
+                All Dates
+              </option>
+
+              <option value="today">
+                Today
+              </option>
+
+              <option value="thisMonth">
+                This Month
+              </option>
+
+              <option value="thisYear">
+                This Year
+              </option>
+
+              <option value="range">
+                Date Range
+              </option>
+
+            </select>
+
+          </div>
+
+
+          {/* =================================================
+              DATE RANGE
+          ================================================= */}
+
+          {filters.dateFilter ===
+            "range" && (
+
+            <>
+
+              <div className="report-filter">
+
+                <label>
+
+                  <FaCalendarAlt />
+
+                  From Date
+
+                </label>
+
+
+                <input
+                  type="date"
+                  name="dateFrom"
+                  value={
+                    filters.dateFrom
+                  }
+                  onChange={
+                    handleChange
+                  }
+                />
+
+              </div>
+
+
+              <div className="report-filter">
+
+                <label>
+
+                  <FaCalendarAlt />
+
+                  To Date
+
+                </label>
+
+
+                <input
+                  type="date"
+                  name="dateTo"
+                  value={
+                    filters.dateTo
+                  }
+                  onChange={
+                    handleChange
+                  }
+                />
+
+              </div>
+
+            </>
+
+          )}
+
+
+          {/* =================================================
+              BRANCH
+          ================================================= */}
 
           <div className="report-filter">
 
@@ -714,15 +1098,21 @@ function Reports() {
 
             </label>
 
+
             <select
               name="branch"
-              value={filters.branch}
-              onChange={handleChange}
+              value={
+                filters.branch
+              }
+              onChange={
+                handleChange
+              }
             >
 
               <option value="">
                 All Branches
               </option>
+
 
               {branchNames.map(
                 (branch) => (
@@ -742,7 +1132,9 @@ function Reports() {
           </div>
 
 
-          {/* STAFF */}
+          {/* =================================================
+              STAFF
+          ================================================= */}
 
           <div className="report-filter">
 
@@ -754,15 +1146,21 @@ function Reports() {
 
             </label>
 
+
             <select
               name="staff"
-              value={filters.staff}
-              onChange={handleChange}
+              value={
+                filters.staff
+              }
+              onChange={
+                handleChange
+              }
             >
 
               <option value="">
                 All Staff
               </option>
+
 
               {staffNames.map(
                 (staff) => (
@@ -782,7 +1180,9 @@ function Reports() {
           </div>
 
 
-          {/* DUE DAY */}
+          {/* =================================================
+              DUE DAY
+          ================================================= */}
 
           <div className="report-filter">
 
@@ -794,32 +1194,38 @@ function Reports() {
 
             </label>
 
+
             <select
               name="dueDay"
-              value={filters.dueDay}
-              onChange={handleChange}
+              value={
+                filters.dueDay
+              }
+              onChange={
+                handleChange
+              }
             >
 
               <option value="">
                 All Due Days
               </option>
 
+
               {Array.from(
-                { length: 31 },
+                {
+                  length: 31,
+                },
                 (_, index) => {
 
                   const day =
                     index + 1;
 
                   return (
-
                     <option
                       key={day}
                       value={day}
                     >
                       {day}
                     </option>
-
                   );
 
                 }
@@ -830,7 +1236,9 @@ function Reports() {
           </div>
 
 
-          {/* CHIT VALUE */}
+          {/* =================================================
+              CHIT VALUE
+          ================================================= */}
 
           <div className="report-filter">
 
@@ -842,15 +1250,21 @@ function Reports() {
 
             </label>
 
+
             <select
               name="chitValue"
-              value={filters.chitValue}
-              onChange={handleChange}
+              value={
+                filters.chitValue
+              }
+              onChange={
+                handleChange
+              }
             >
 
               <option value="">
                 All Chit Values
               </option>
+
 
               {chitValues.map(
                 (value) => (
@@ -859,7 +1273,9 @@ function Reports() {
                     key={value}
                     value={value}
                   >
-                    {formatCurrency(value)}
+                    {formatCurrency(
+                      value
+                    )}
                   </option>
 
                 )
@@ -870,14 +1286,18 @@ function Reports() {
           </div>
 
 
-          {/* BUTTONS */}
+          {/* =================================================
+              BUTTONS
+          ================================================= */}
 
           <div className="filter-buttons">
 
             <button
               type="button"
               className="filter-btn"
-              onClick={applyFilters}
+              onClick={
+                applyFilters
+              }
             >
 
               <FaSearch />
@@ -890,7 +1310,9 @@ function Reports() {
             <button
               type="button"
               className="clear-filter-btn"
-              onClick={clearFilters}
+              onClick={
+                clearFilters
+              }
             >
 
               <FaTimes />
@@ -903,8 +1325,9 @@ function Reports() {
             <button
               type="button"
               className="filter-btn"
-              onClick={handlePrint}
-              title="Print Report"
+              onClick={
+                handlePrint
+              }
             >
 
               <FaPrint />
@@ -920,7 +1343,9 @@ function Reports() {
       </div>
 
 
-      {/* REPORT TABLE */}
+      {/* =================================================
+          REPORT TABLE
+      ================================================= */}
 
       <div className="reports-table-card">
 
@@ -933,14 +1358,21 @@ function Reports() {
             </h2>
 
             <p>
-              Saved procedure entries
+              {reportPeriodText}
             </p>
 
           </div>
 
+
           <div className="record-count">
 
-            {filteredData.length} Records
+            {filteredData.length}
+
+            {" "}
+
+            {filteredData.length === 1
+              ? "Record"
+              : "Records"}
 
           </div>
 
@@ -957,6 +1389,10 @@ function Reports() {
 
                 <th>
                   S.No
+                </th>
+
+                <th>
+                  Date
                 </th>
 
                 <th>
@@ -1011,22 +1447,27 @@ function Reports() {
                 <tr>
 
                   <td
-                    colSpan="11"
+                    colSpan="12"
                     style={{
-                      textAlign: "center",
-                      padding: "30px",
+                      textAlign:
+                        "center",
+                      padding:
+                        "30px",
                     }}
                   >
+
                     Loading procedures...
+
                   </td>
 
                 </tr>
 
-              ) : filteredData.length === 0 ? (
+              ) : filteredData.length ===
+                0 ? (
 
                 <tr>
 
-                  <td colSpan="11">
+                  <td colSpan="12">
 
                     <div className="no-data">
 
@@ -1036,13 +1477,16 @@ function Reports() {
 
                       </div>
 
+
                       <h3>
                         No Records Found
                       </h3>
 
+
                       <p>
-                        No procedure entries match
-                        the selected filters.
+                        No procedure entries
+                        match the selected
+                        filters.
                       </p>
 
                     </div>
@@ -1067,17 +1511,31 @@ function Reports() {
                         {index + 1}
                       </td>
 
-                      <td>
-                        {item.branch || "-"}
-                      </td>
 
                       <td>
-                        {item.staffName || "-"}
+                        {formatDate(
+                          item.joinedDate
+                        )}
                       </td>
 
+
                       <td>
-                        {item.customerName || "-"}
+                        {item.branch ||
+                          "-"}
                       </td>
+
+
+                      <td>
+                        {item.staffName ||
+                          "-"}
+                      </td>
+
+
+                      <td>
+                        {item.customerName ||
+                          "-"}
+                      </td>
+
 
                       <td>
                         {formatCurrency(
@@ -1085,28 +1543,40 @@ function Reports() {
                         )}
                       </td>
 
-                      <td>
-                        {item.keyLever || "-"}
-                      </td>
 
                       <td>
-                        {item.followUp ?? "-"}
+                        {item.keyLever ||
+                          "-"}
                       </td>
 
-                      <td>
-                        {item.dueDay || "-"}
-                      </td>
 
                       <td>
-                        {item.payMode || "-"}
+                        {item.followUp ??
+                          "-"}
                       </td>
 
-                      <td>
-                        {item.collectionType || "-"}
-                      </td>
 
                       <td>
-                        {item.remarks || "-"}
+                        {item.dueDay ||
+                          "-"}
+                      </td>
+
+
+                      <td>
+                        {item.payMode ||
+                          "-"}
+                      </td>
+
+
+                      <td>
+                        {item.collectionType ||
+                          "-"}
+                      </td>
+
+
+                      <td>
+                        {item.remarks ||
+                          "-"}
                       </td>
 
                     </tr>
@@ -1124,8 +1594,9 @@ function Reports() {
 
       </div>
 
+        </div>
+      </main>
     </div>
-
   );
 }
 
