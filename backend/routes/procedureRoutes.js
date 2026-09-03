@@ -34,6 +34,8 @@ router.post("/", async (req, res) => {
       !chitValue ||
       !keyLever ||
       followUp === "" ||
+      followUp === null ||
+      followUp === undefined ||
       !dueDay ||
       !payMode ||
       !collectionType
@@ -107,7 +109,7 @@ router.get("/", async (req, res) => {
       `
       SELECT
         id,
-        DATE_FORMAT(joined_date, '%Y-%m-%d') AS joinedDate,
+        joined_date AS joinedDate,
         branch,
         staff_name AS staffName,
         customer_name AS customerName,
@@ -171,6 +173,8 @@ router.put("/:id", async (req, res) => {
       !chitValue ||
       !keyLever ||
       followUp === "" ||
+      followUp === null ||
+      followUp === undefined ||
       !dueDay ||
       !payMode ||
       !collectionType
