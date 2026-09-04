@@ -30,7 +30,7 @@ const API_URL =
   "https://seyal-chits-backend.onrender.com/api/procedures";
 
 
-function Procedure() {
+function NewChit() {
 
   // =====================================================
   // FORM DATA
@@ -52,7 +52,7 @@ function Procedure() {
 
 
   // =====================================================
-  // PROCEDURES LIST
+  // NEW CHITS LIST
   // =====================================================
 
   const [procedures, setProcedures] = useState([]);
@@ -106,7 +106,7 @@ function Procedure() {
 
 
   // =====================================================
-  // FETCH ALL PROCEDURES
+  // FETCH ALL NEW CHITS
   // =====================================================
 
   const fetchProcedures = async () => {
@@ -121,7 +121,7 @@ function Procedure() {
 
       if (!response.ok) {
         throw new Error(
-          result.message || "Failed to fetch procedures"
+          result.message || "Failed to fetch new chits"
         );
       }
 
@@ -130,12 +130,12 @@ function Procedure() {
     } catch (error) {
 
       console.error(
-        "Procedure Fetch Error:",
+        "New Chit Fetch Error:",
         error
       );
 
       alert(
-        "Unable to load procedures. Please check backend."
+        "Unable to load new chits. Please check backend."
       );
 
     } finally {
@@ -148,7 +148,7 @@ function Procedure() {
 
 
   // =====================================================
-  // LOAD PROCEDURES ON PAGE LOAD
+  // LOAD NEW CHITS ON PAGE LOAD
   // =====================================================
 
   useEffect(() => {
@@ -159,7 +159,7 @@ function Procedure() {
 
 
   // =====================================================
-  // SAVE / UPDATE PROCEDURE
+  // SAVE / UPDATE NEW CHIT
   // =====================================================
 
   const handleSubmit = async (e) => {
@@ -202,8 +202,8 @@ function Procedure() {
           result.message ||
           (
             isEditing
-              ? "Failed to update procedure"
-              : "Failed to save procedure"
+              ? "Failed to update new chit"
+              : "Failed to save new chit"
           )
         );
 
@@ -214,13 +214,13 @@ function Procedure() {
       if (isEditing) {
 
         alert(
-          "Procedure updated successfully!"
+          "New Chit updated successfully!"
         );
 
       } else {
 
         alert(
-          "Procedure saved successfully!"
+          "New Chit saved successfully!"
         );
 
       }
@@ -247,7 +247,7 @@ function Procedure() {
 
 
   // =====================================================
-  // EDIT PROCEDURE
+  // EDIT NEW CHIT
   // =====================================================
 
   const handleEdit = (procedure) => {
@@ -291,13 +291,13 @@ function Procedure() {
 
 
   // =====================================================
-  // DELETE PROCEDURE
+  // DELETE NEW CHIT
   // =====================================================
 
   const handleDelete = async (id) => {
 
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this procedure?"
+      "Are you sure you want to delete this new chit?"
     );
 
     if (!confirmDelete) {
@@ -322,7 +322,7 @@ function Procedure() {
 
         alert(
           result.message ||
-          "Failed to delete procedure"
+          "Failed to delete new chit"
         );
 
         return;
@@ -330,7 +330,7 @@ function Procedure() {
 
 
       alert(
-        "Procedure deleted successfully!"
+        "New Chit deleted successfully!"
       );
 
 
@@ -408,7 +408,7 @@ function Procedure() {
             }
           >
             <FaClipboardList />
-            <span>Procedure</span>
+            <span>New Chit</span>
           </NavLink>
 
           <NavLink
@@ -443,11 +443,11 @@ function Procedure() {
         <div>
 
           <h1>
-            Procedure
+            New Chit
           </h1>
 
           <p>
-            Create and manage procedure entries
+            Create and manage new chit entries
           </p>
 
         </div>
@@ -485,14 +485,14 @@ function Procedure() {
 
             <h2>
               {editingId
-                ? "Edit Procedure"
-                : "New Procedure"}
+                ? "Edit New Chit"
+                : "New Chit"}
             </h2>
 
             <p>
               {editingId
-                ? "Update the customer procedure details below"
-                : "Enter the customer procedure details below"}
+                ? "Update the customer new chit details below"
+                : "Enter the customer new chit details below"}
             </p>
 
           </div>
@@ -760,7 +760,7 @@ function Procedure() {
                   ₹10,00,000
                 </option>
 
-         <option value="2git add src/pages/Procedure.jsx src/pages/Reports.jsx000000">
+         <option value="2000000">
                   ₹20,00,000
                 </option>  
               </select>
@@ -827,6 +827,10 @@ function Procedure() {
 
                 <option value="Security for Money">
                   Security for Money
+                </option>
+
+                <option value="Others">
+                  Others
                 </option>
 
               </select>
@@ -982,6 +986,10 @@ function Procedure() {
                   Cheque
                 </option>
 
+                <option value="Field">
+                  Field
+                </option>
+
               </select>
 
             </div>
@@ -1096,8 +1104,8 @@ function Procedure() {
                 : <FaSave />}
 
               {editingId
-                ? "Update Procedure"
-                : "Save Procedure"}
+                ? "Update New Chit"
+                : "Save New Chit"}
 
             </button>
 
@@ -1113,7 +1121,7 @@ function Procedure() {
 
 
       {/* =====================================================
-          SAVED PROCEDURES
+          SAVED NEW CHITS
       ===================================================== */}
 
       <div
@@ -1135,11 +1143,11 @@ function Procedure() {
           <div>
 
             <h2>
-              Saved Procedures
+              Saved New Chits
             </h2>
 
             <p>
-              View, edit and delete procedure entries
+              View, edit and delete new chit entries
             </p>
 
           </div>
@@ -1187,7 +1195,7 @@ function Procedure() {
             }}
           >
 
-            Loading procedures...
+            Loading new chits...
 
           </div>
 
@@ -1210,7 +1218,7 @@ function Procedure() {
               }}
             >
 
-              No procedures found.
+              No new chits found.
 
             </div>
 
@@ -1219,7 +1227,7 @@ function Procedure() {
 
 
         {/* =================================================
-            PROCEDURE TABLE
+            NEW CHIT TABLE
         ================================================= */}
 
         {!loading &&
@@ -1484,4 +1492,4 @@ const tableCellStyle = {
 };
 
 
-export default Procedure;
+export default NewChit;

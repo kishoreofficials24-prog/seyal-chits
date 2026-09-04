@@ -110,7 +110,7 @@ function Dashboard() {
 
 
   // =====================================================
-  // RECENT PROCEDURES
+  // RECENT NEW CHITS
   // =====================================================
 
   const recentProcedures =
@@ -169,7 +169,7 @@ function Dashboard() {
 
 
 
-          {/* PROCEDURE */}
+          {/* NEW CHIT */}
 
           <NavLink
             to="/procedure"
@@ -183,7 +183,7 @@ function Dashboard() {
             <FaClipboardList />
 
             <span>
-              Procedure
+              New Chit
             </span>
 
           </NavLink>
@@ -292,7 +292,7 @@ function Dashboard() {
             </h2>
 
             <p>
-              Manage your procedures and
+              Manage your new chits and
               reports from one place.
             </p>
 
@@ -316,7 +316,7 @@ function Dashboard() {
         <section className="stats-grid">
 
 
-          {/* TOTAL PROCEDURES */}
+          {/* TOTAL NEW CHITS */}
 
           <div className="stat-card">
 
@@ -330,7 +330,7 @@ function Dashboard() {
             <div>
 
               <span>
-                Total Procedures
+                Total New Chits
               </span>
 
               <h2>
@@ -461,7 +461,7 @@ function Dashboard() {
           <div className="quick-actions">
 
 
-            {/* NEW PROCEDURE */}
+            {/* NEW CHIT */}
 
             <NavLink
               to="/procedure"
@@ -478,11 +478,11 @@ function Dashboard() {
               <div>
 
                 <h3>
-                  New Procedure
+                  New Chit
                 </h3>
 
                 <p>
-                  Add a new procedure entry
+                  Add a new chit entry
                 </p>
 
               </div>
@@ -512,7 +512,7 @@ function Dashboard() {
                 </h3>
 
                 <p>
-                  Check procedure records
+                  Check new chit records
                 </p>
 
               </div>
@@ -527,7 +527,7 @@ function Dashboard() {
 
 
         {/* =================================================
-            RECENT PROCEDURES
+            RECENT NEW CHITS
         ================================================= */}
 
         <section className="dashboard-section">
@@ -538,11 +538,11 @@ function Dashboard() {
             <div>
 
               <h2>
-                Recent Procedures
+                Recent New Chits
               </h2>
 
               <p>
-                Latest procedure entries
+                Latest new chit entries
               </p>
 
             </div>
@@ -563,12 +563,12 @@ function Dashboard() {
 
 
               <h3>
-                No Procedures Yet
+                No New Chits Yet
               </h3>
 
 
               <p>
-                Your latest procedure entries
+                Your latest new chit entries
                 will appear here.
               </p>
 

@@ -337,6 +337,17 @@ function Reports() {
   }, [data, appliedFilters]);
 
   // =====================================================
+  // TOTAL CHIT VALUE
+  // =====================================================
+
+  const totalChitValue = useMemo(() => {
+    return filteredData.reduce((total, item) => {
+      const value = Number(item.chitValue);
+      return total + (Number.isNaN(value) ? 0 : value);
+    }, 0);
+  }, [filteredData]);
+
+  // =====================================================
   // FORMAT CURRENCY
   // =====================================================
 
@@ -486,7 +497,7 @@ function Reports() {
       <head>
 
         <title>
-          SEYAL CHITS - Procedure Report
+          SEYAL CHITS - New Chit Report
         </title>
 
         <style>
@@ -648,7 +659,7 @@ function Reports() {
           </h1>
 
           <h2>
-            Procedure Report
+            New Chit Report
           </h2>
 
           <div class="print-date">
@@ -773,7 +784,7 @@ function Reports() {
         </div>
         <nav className="sidebar-menu">
           <NavLink to="/dashboard" className={({ isActive }) => `menu-item ${isActive ? "active" : ""}`}><FaHome /><span>Dashboard</span></NavLink>
-          <NavLink to="/procedure" className={({ isActive }) => `menu-item ${isActive ? "active" : ""}`}><FaClipboardList /><span>Procedure</span></NavLink>
+          <NavLink to="/procedure" className={({ isActive }) => `menu-item ${isActive ? "active" : ""}`}><FaClipboardList /><span>New Chit</span></NavLink>
           <NavLink to="/reports" className={({ isActive }) => `menu-item ${isActive ? "active" : ""}`}><FaChartBar /><span>Reports</span></NavLink>
         </nav>
         <div className="sidebar-footer">
@@ -797,7 +808,7 @@ function Reports() {
           </h1>
 
           <p>
-            View and filter procedure records
+            View and filter new chit records
           </p>
 
         </div>
@@ -816,11 +827,39 @@ function Reports() {
           FILTER CARD
       ================================================= */}
 
-      <div className="reports-filter-card">
+      <div
+        className="reports-filter-card"
+        style={{
+          borderRadius: "18px",
+          overflow: "hidden",
+          border: "1px solid #e3e8ee",
+          boxShadow: "0 10px 30px rgba(23, 50, 77, 0.08)",
+          background: "#ffffff",
+        }}
+      >
 
-        <div className="filter-title">
+        <div
+          className="filter-title"
+          style={{
+            padding: "22px 24px",
+            borderBottom: "1px solid #edf1f5",
+            background:
+              "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+          }}
+        >
 
-          <div className="filter-title-icon">
+          <div
+            className="filter-title-icon"
+            style={{
+              width: "52px",
+              height: "52px",
+              borderRadius: "15px",
+              background:
+                "linear-gradient(135deg, #fff4cf 0%, #ffe8a3 100%)",
+              color: "#c88a00",
+              boxShadow: "0 6px 16px rgba(200, 138, 0, 0.12)",
+            }}
+          >
 
             <FaSearch />
 
@@ -829,11 +868,23 @@ function Reports() {
 
           <div>
 
-            <h2>
+            <h2
+              style={{
+                marginBottom: "3px",
+                color: "#17324d",
+                fontWeight: "800",
+                letterSpacing: "-0.3px",
+              }}
+            >
               Filter Reports
             </h2>
 
-            <p>
+            <p
+              style={{
+                color: "#8290a0",
+                fontSize: "14px",
+              }}
+            >
               Choose date period and other filters
             </p>
 
@@ -1163,7 +1214,13 @@ function Reports() {
               BUTTONS
           ================================================= */}
 
-          <div className="filter-buttons">
+          <div
+            className="filter-buttons"
+            style={{
+              gap: "10px",
+              alignItems: "stretch",
+            }}
+          >
 
             <button
               type="button"
@@ -1171,6 +1228,12 @@ function Reports() {
               onClick={
                 applyFilters
               }
+              style={{
+                minHeight: "46px",
+                borderRadius: "12px",
+                fontWeight: "800",
+                boxShadow: "0 6px 14px rgba(23, 50, 77, 0.12)",
+              }}
             >
 
               <FaSearch />
@@ -1186,6 +1249,11 @@ function Reports() {
               onClick={
                 clearFilters
               }
+              style={{
+                minHeight: "46px",
+                borderRadius: "12px",
+                fontWeight: "700",
+              }}
             >
 
               <FaTimes />
@@ -1201,6 +1269,12 @@ function Reports() {
               onClick={
                 handlePrint
               }
+              style={{
+                minHeight: "46px",
+                borderRadius: "12px",
+                fontWeight: "800",
+                boxShadow: "0 6px 14px rgba(23, 50, 77, 0.12)",
+              }}
             >
 
               <FaPrint />
@@ -1208,6 +1282,71 @@ function Reports() {
               Print
 
             </button>
+
+            <div
+              style={{
+                minHeight: "46px",
+                minWidth: "235px",
+                padding: "8px 16px",
+                borderRadius: "13px",
+                background:
+                  "linear-gradient(135deg, #17324d 0%, #244a68 100%)",
+                border: "1px solid #17324d",
+                boxShadow: "0 8px 20px rgba(23, 50, 77, 0.16)",
+                color: "#ffffff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "14px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "9px",
+                }}
+              >
+                <span
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "9px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "rgba(255, 255, 255, 0.12)",
+                    color: "#ffd66b",
+                  }}
+                >
+                  <FaMoneyBillWave />
+                </span>
+
+                <span
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    color: "#cbd8e4",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.7px",
+                  }}
+                >
+                   Chit Value
+                </span>
+              </div>
+
+              <strong
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "900",
+                  color: "#ffd66b",
+                  letterSpacing: "0.2px",
+                }}
+              >
+                {formatCurrency(totalChitValue)}
+              </strong>
+            </div>
 
           </div>
 
@@ -1227,7 +1366,7 @@ function Reports() {
           <div>
 
             <h2>
-              Procedure Records
+              New Chit Records
             </h2>
 
             <p>
@@ -1329,7 +1468,7 @@ function Reports() {
                     }}
                   >
 
-                    Loading procedures...
+                    Loading new chits...
 
                   </td>
 
@@ -1357,7 +1496,7 @@ function Reports() {
 
 
                       <p>
-                        No procedure entries
+                        No new chit entries
                         match the selected
                         filters.
                       </p>
