@@ -1,0 +1,848 @@
+/* =========================================================
+   SETTINGS PAGE
+   SAME UI STYLE AS REPORTS HOME PAGE
+   ========================================================= */
+
+.settings-page {
+  min-height: 100vh;
+
+  background: #f5f7f9;
+
+  color: #182d3b;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.settings-page .settings-sidebar {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 250px;
+  height: 100vh;
+
+  background: #182d3b;
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 1000;
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.settings-page .settings-sidebar-logo-area {
+  height: 125px;
+
+  padding: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+}
+
+.settings-page .settings-sidebar-logo {
+  width: 78px;
+  height: 78px;
+
+  object-fit: contain;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  padding: 4px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SIDEBAR MENU
+   ========================================================= */
+
+.settings-page .settings-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 15px;
+}
+
+
+/* =========================================================
+   MENU ITEM
+   ========================================================= */
+
+.settings-page .settings-menu-item {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  min-height: 48px;
+
+  padding: 0 15px;
+
+  border-radius: 8px;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  box-sizing: border-box;
+
+  transition: 0.2s ease;
+}
+
+.settings-page .settings-menu-item svg {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+}
+
+.settings-page .settings-menu-item:hover {
+  background: rgba(216, 169, 39, 0.15);
+
+  color: #d8a927;
+}
+
+.settings-page .settings-menu-item.active {
+  background: #d8a927;
+
+  color: #182d3b;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   SIDEBAR FOOTER
+   ========================================================= */
+
+.settings-page .settings-sidebar-footer {
+  margin-top: auto;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  color: #ffffff;
+}
+
+.settings-page .settings-sidebar-footer strong {
+  font-size: 15px;
+
+  letter-spacing: 0.5px;
+}
+
+.settings-page .settings-sidebar-footer span {
+  font-size: 11px;
+
+  color: #d8a927;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.settings-page .settings-main-content {
+  margin-left: 250px;
+
+  min-height: 100vh;
+
+  padding: 55px 60px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.settings-page .settings-header {
+  margin-bottom: 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+
+/* =========================================================
+   SETTINGS TITLE
+   ========================================================= */
+
+.settings-page .settings-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+.settings-page .settings-title-icon {
+  width: 52px;
+  height: 52px;
+
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #182d3b;
+
+  color: #d8a927;
+
+  font-size: 23px;
+
+  flex-shrink: 0;
+}
+
+.settings-page .settings-title h1 {
+  margin: 0 0 7px;
+
+  font-size: 32px;
+
+  color: #182d3b;
+
+  font-weight: 700;
+}
+
+.settings-page .settings-title p {
+  margin: 0;
+
+  font-size: 16px;
+
+  color: #71808c;
+}
+
+
+/* =========================================================
+   REFRESH BUTTON
+   ========================================================= */
+
+.settings-page .settings-refresh-btn {
+  border: 0;
+
+  border-radius: 8px;
+
+  padding: 0 17px;
+
+  min-height: 44px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  background: #182d3b;
+
+  color: #ffffff;
+
+  transition: 0.2s ease;
+}
+
+.settings-page .settings-refresh-btn:hover {
+  background: #223c4c;
+}
+
+.settings-page .settings-refresh-btn:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+.settings-page .settings-tabs {
+  display: flex;
+
+  gap: 5px;
+
+  margin-bottom: 24px;
+
+  padding: 6px;
+
+  background: #ffffff;
+
+  border: 1px solid #e3e8ec;
+
+  border-radius: 12px;
+
+  width: fit-content;
+
+  box-shadow:
+    0 4px 14px rgba(24, 45, 59, 0.04);
+}
+
+.settings-page .settings-tabs button {
+  border: 0;
+
+  background: transparent;
+
+  color: #71808c;
+
+  padding: 11px 17px;
+
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition: 0.2s ease;
+}
+
+.settings-page .settings-tabs button:hover {
+  color: #182d3b;
+
+  background: #f5f7f9;
+}
+
+.settings-page .settings-tabs button.active {
+  background: #182d3b;
+
+  color: #d8a927;
+}
+
+
+/* =========================================================
+   SETTINGS CONTENT
+   ========================================================= */
+
+.settings-page .settings-content {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(300px, 0.8fr)
+    minmax(500px, 1.7fr);
+
+  gap: 24px;
+
+  align-items: start;
+}
+
+
+/* =========================================================
+   FORM CARD
+   ========================================================= */
+
+.settings-page .settings-form-card,
+.settings-page .settings-list-card {
+  background: #ffffff;
+
+  border: 1px solid #e3e8ec;
+
+  border-radius: 18px;
+
+  padding: 28px 30px;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 6px 20px rgba(24, 45, 59, 0.07);
+}
+
+
+/* =========================================================
+   CARD HEADINGS
+   ========================================================= */
+
+.settings-page .settings-card-heading h2,
+.settings-page .settings-list-heading h2 {
+  margin: 0;
+
+  font-size: 21px;
+
+  color: #182d3b;
+
+  font-weight: 700;
+}
+
+.settings-page .settings-card-heading p {
+  margin: 7px 0 20px;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+
+  color: #71808c;
+}
+
+
+/* =========================================================
+   LIST HEADING
+   ========================================================= */
+
+.settings-page .settings-list-heading {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+}
+
+.settings-page .settings-list-heading span {
+  display: block;
+
+  margin-top: 4px;
+
+  font-size: 12px;
+
+  color: #71808c;
+}
+
+
+/* =========================================================
+   FORM INPUT
+   ========================================================= */
+
+.settings-page .settings-form-row input,
+.settings-page .settings-form-grid input {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d8e0e5;
+
+  border-radius: 9px;
+
+  padding: 12px 13px;
+
+  outline: none;
+
+  font-size: 14px;
+
+  color: #182d3b;
+
+  background: #ffffff;
+
+  transition: 0.2s ease;
+}
+
+.settings-page .settings-form-row input:focus,
+.settings-page .settings-form-grid input:focus {
+  border-color: #d8a927;
+
+  box-shadow:
+    0 0 0 3px rgba(216, 169, 39, 0.10);
+}
+
+
+/* =========================================================
+   CHIT FORM GRID
+   ========================================================= */
+
+.settings-page .settings-form-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.settings-page .settings-form-actions {
+  display: flex;
+
+  gap: 10px;
+
+  margin-top: 15px;
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+   ========================================================= */
+
+.settings-page .settings-save-btn {
+  border: 0;
+
+  border-radius: 8px;
+
+  padding: 11px 17px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  background: #182d3b;
+
+  color: #ffffff;
+
+  transition: 0.2s ease;
+}
+
+.settings-page .settings-save-btn:hover {
+  background: #223c4c;
+}
+
+.settings-page .settings-save-btn:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   CANCEL BUTTON
+   ========================================================= */
+
+.settings-page .settings-cancel-btn {
+  border: 0;
+
+  border-radius: 8px;
+
+  padding: 11px 17px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  background: #eef1f3;
+
+  color: #182d3b;
+
+  transition: 0.2s ease;
+}
+
+.settings-page .settings-cancel-btn:hover {
+  background: #e1e6e9;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.settings-page .settings-table-wrap {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.settings-page .settings-table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+.settings-page .settings-table th,
+.settings-page .settings-table td {
+  padding: 13px 10px;
+
+  text-align: left;
+
+  border-bottom: 1px solid #e3e8ec;
+
+  font-size: 14px;
+}
+
+.settings-page .settings-table th {
+  color: #71808c;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+}
+
+.settings-page .settings-table td {
+  color: #182d3b;
+
+  font-weight: 500;
+}
+
+.settings-page .settings-table tbody tr {
+  transition: 0.2s ease;
+}
+
+.settings-page .settings-table tbody tr:hover {
+  background: #fafbfc;
+}
+
+.settings-page .settings-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.settings-page .settings-actions {
+  display: flex;
+
+  gap: 7px;
+}
+
+.settings-page .settings-actions button {
+  width: 34px;
+  height: 34px;
+
+  border: 0;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.2s ease;
+}
+
+
+/* =========================================================
+   EDIT BUTTON
+   ========================================================= */
+
+.settings-page .edit-btn {
+  background: #f1f3f5;
+
+  color: #374151;
+}
+
+.settings-page .edit-btn:hover {
+  background: #e5e8eb;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+   ========================================================= */
+
+.settings-page .delete-btn {
+  background: #fff0f0;
+
+  color: #dc2626;
+}
+
+.settings-page .delete-btn:hover {
+  background: #ffe2e2;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   EMPTY / LOADING
+   ========================================================= */
+
+.settings-page .settings-empty {
+  padding: 35px 10px;
+
+  text-align: center;
+
+  color: #9aa6af;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   REFRESH SPIN
+   ========================================================= */
+
+.settings-page .spin {
+  animation:
+    settings-spin 0.9s linear infinite;
+}
+
+@keyframes settings-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — 1100px
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .settings-page .settings-content {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — 900px
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .settings-page .settings-sidebar {
+    width: 220px;
+  }
+
+  .settings-page .settings-main-content {
+    margin-left: 220px;
+
+    padding: 40px 30px;
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — 650px
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  .settings-page .settings-sidebar {
+    position: relative;
+
+    width: 100%;
+
+    height: auto;
+  }
+
+  .settings-page .settings-sidebar-logo-area {
+    height: 100px;
+  }
+
+  .settings-page .settings-sidebar-menu {
+    padding: 10px 15px 15px;
+  }
+
+  .settings-page .settings-sidebar-footer {
+    display: none;
+  }
+
+  .settings-page .settings-main-content {
+    margin-left: 0;
+
+    padding: 30px 20px;
+  }
+
+  .settings-page .settings-title h1 {
+    font-size: 27px;
+  }
+
+  .settings-page .settings-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .settings-page .settings-refresh-btn {
+    align-self: flex-start;
+  }
+
+  .settings-page .settings-content {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-page .settings-form-card,
+  .settings-page .settings-list-card {
+    padding: 24px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+  .settings-page .settings-main-content {
+    padding: 25px 15px;
+  }
+
+  .settings-page .settings-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-page .settings-title h1 {
+    font-size: 24px;
+  }
+
+}

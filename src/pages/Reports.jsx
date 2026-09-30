@@ -1,1613 +1,224 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { NavLink } from "react-router-dom";
-
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   FaHome,
-  FaChartBar,
-  FaBuilding,
-  FaUser,
-  FaCalendarAlt,
-  FaMoneyBillWave,
-  FaSearch,
-  FaTimes,
   FaClipboardList,
-  FaPrint,
+  FaDatabase,
+  FaListOl,
+  FaMoneyBillWave,
+  FaChartBar,
+  FaFileAlt,
+  FaCalendarAlt,
+  FaCreditCard,
+  FaLayerGroup,
+  FaClock,
+  FaCog,
 } from "react-icons/fa";
-
 import "./Reports.css";
-import "./Dashboard.css";
 
-const API_URL =
-  "https://seyal-chits-backend.onrender.com/api/procedures";
-
-function getLocalDateString(date = new Date()) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function getJoinedDate(item) {
-  if (!item.joinedDate) return "";
-  return String(item.joinedDate).slice(0, 10);
-}
-
-function getFirstDayOfMonth() {
-  const today = new Date();
-  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-01`;
-}
-
-function getLastDayOfMonth() {
-  const today = new Date();
-  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  return getLocalDateString(lastDay);
-}
-
-function getFirstDayOfYear() {
-  return `${new Date().getFullYear()}-01-01`;
-}
-
-function getLastDayOfYear() {
-  return `${new Date().getFullYear()}-12-31`;
-}
-
-function getActiveDateRange(filterData) {
-  const todayString = getLocalDateString();
-
-  switch (filterData.dateFilter) {
-    case "today":
-      return { from: todayString, to: todayString };
-    case "thisMonth":
-      return { from: getFirstDayOfMonth(), to: getLastDayOfMonth() };
-    case "thisYear":
-      return { from: getFirstDayOfYear(), to: getLastDayOfYear() };
-    case "range":
-      return { from: filterData.dateFrom, to: filterData.dateTo };
-    default:
-      return { from: "", to: "" };
-  }
-}
-
-function formatDate(value) {
-  if (!value) return "-";
-  const cleanDate = String(value).slice(0, 10);
-  const date = new Date(`${cleanDate}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return "-";
-  return date.toLocaleDateString("en-IN");
-}
-
-function getDateFilterLabel(filterData) {
-  switch (filterData.dateFilter) {
-    case "today":
-      return "Today";
-    case "thisMonth":
-      return "This Month";
-    case "thisYear":
-      return "This Year";
-    case "range":
-      if (filterData.dateFrom && filterData.dateTo) {
-        return `${formatDate(filterData.dateFrom)} - ${formatDate(filterData.dateTo)}`;
-      }
-      if (filterData.dateFrom) return `From ${formatDate(filterData.dateFrom)}`;
-      if (filterData.dateTo) return `Up to ${formatDate(filterData.dateTo)}`;
-      return "Date Range";
-    default:
-      return "All Dates";
-  }
-}
+const reportCards = [
+  {
+    id: 1,
+    title: "Normal Chit Report",
+    description:
+      "View normal chit customer, staff, branch, chit value and collection details.",
+    icon: <FaFileAlt />,
+    path: "/reports/normal-chit",
+  },
+  {
+    id: 2,
+    title: "Payment Plan Report",
+    description:
+      "View payment plan details, selected month and payment amount.",
+    icon: <FaCalendarAlt />,
+    path: "/reports/payment-plan",
+  },
+  {
+    id: 3,
+    title: "Payment Report",
+    description:
+      "View payment collection details, amount, date, place and status.",
+    icon: <FaCreditCard />,
+    path: "/reports/payment",
+  },
+  {
+    id: 4,
+    title: "Plan + Payment Report",
+    description:
+      "View payment plan and actual payment details together in one report.",
+    icon: <FaLayerGroup />,
+    path: "/reports/combined",
+  },
+  {
+    id: 5,
+    title: "Future Chit Report",
+    description:
+      "View future chit requirements based on the customer's required month.",
+    icon: <FaClock />,
+    path: "/reports/future-chit",
+  },
+];
 
 function Reports() {
-  // =====================================================
-  // DATA
-  // =====================================================
-
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  // =====================================================
-  // FILTERS
-  // =====================================================
-
-  const emptyFilters = {
-    dateFilter: "all",
-    dateFrom: "",
-    dateTo: "",
-    branch: "",
-    staff: "",
-    dueDay: "",
-    chitValue: "",
-  };
-
-  const [filters, setFilters] = useState(emptyFilters);
-
-  const [appliedFilters, setAppliedFilters] =
-    useState(emptyFilters);
-
-  // =====================================================
-  // FETCH PROCEDURES
-  // =====================================================
-
-  const fetchProcedures = async () => {
-    try {
-      setLoading(true);
-
-      const response = await fetch(API_URL);
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          result.message || "Failed to fetch procedures"
-        );
-      }
-
-      setData(
-        result.success && Array.isArray(result.data)
-          ? result.data
-          : []
-      );
-    } catch (error) {
-      console.error("Reports Fetch Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProcedures();
-  }, []);
-
-  // =====================================================
-  // STAFF
-  // =====================================================
-
-  const staffNames = [
-    "Thiyagarajan",
-    "Renugadevi",
-    "Prathap",
-    "Venkateshan",
-    "Uma Devi",
-    "Rathinam",
-    "Bharani",
-    "Rani",
-    "Loganayaki",
-    "Chandralekha",
-    "Chinnasamy L",
-    "Muthulakshmi A",
-    "Agalya",
-    "Tamizharasi M",
-    "Ruckmani",
-    "Devika",
-    "Rajalakshmi K",
-  ];
-
-  // =====================================================
-  // BRANCHES
-  // =====================================================
-
-  const branchNames = useMemo(() => {
-    const branches = data
-      .map((item) =>
-        String(item.branch || "").trim()
-      )
-      .filter(Boolean);
-
-    return [...new Set(branches)].sort((a, b) =>
-      a.localeCompare(b)
-    );
-  }, [data]);
-
-  // =====================================================
-  // CHIT VALUES
-  // =====================================================
-
-  const chitValues = useMemo(() => {
-    const values = data
-      .map((item) => Number(item.chitValue))
-      .filter(
-        (value) =>
-          !Number.isNaN(value) && value > 0
-      );
-
-    return [...new Set(values)].sort(
-      (a, b) => a - b
-    );
-  }, [data]);
-
-  // =====================================================
-  // HANDLE FILTER CHANGE
-  // =====================================================
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFilters((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
-  };
-
-  // =====================================================
-  // APPLY FILTERS
-  // =====================================================
-
-  const applyFilters = () => {
-    setAppliedFilters({
-      ...filters,
-    });
-  };
-
-  // =====================================================
-  // CLEAR FILTERS
-  // =====================================================
-
-  const clearFilters = () => {
-    setFilters(emptyFilters);
-    setAppliedFilters(emptyFilters);
-  };
-
-  // =====================================================
-  // FILTER DATA
-  // =====================================================
-
-  const filteredData = useMemo(() => {
-    const dateRange =
-      getActiveDateRange(appliedFilters);
-
-    return data.filter((item) => {
-      const itemDate = getJoinedDate(item);
-
-      // -----------------------------------------------
-      // DATE FILTER
-      // -----------------------------------------------
-
-      let dateMatch = true;
-
-      if (
-        dateRange.from ||
-        dateRange.to
-      ) {
-        if (!itemDate) {
-          dateMatch = false;
-        } else {
-          if (
-            dateRange.from &&
-            itemDate < dateRange.from
-          ) {
-            dateMatch = false;
-          }
-
-          if (
-            dateRange.to &&
-            itemDate > dateRange.to
-          ) {
-            dateMatch = false;
-          }
-        }
-      }
-
-      // -----------------------------------------------
-      // BRANCH
-      // -----------------------------------------------
-
-      const branchMatch =
-        !appliedFilters.branch ||
-        String(item.branch || "").trim() ===
-          String(
-            appliedFilters.branch
-          ).trim();
-
-      // -----------------------------------------------
-      // STAFF
-      // -----------------------------------------------
-
-      const staffMatch =
-        !appliedFilters.staff ||
-        String(item.staffName || "").trim() ===
-          String(
-            appliedFilters.staff
-          ).trim();
-
-      // -----------------------------------------------
-      // DUE DAY
-      // -----------------------------------------------
-
-      const dueDayMatch =
-        !appliedFilters.dueDay ||
-        Number(item.dueDay) ===
-          Number(appliedFilters.dueDay);
-
-      // -----------------------------------------------
-      // CHIT VALUE
-      // -----------------------------------------------
-
-      const chitValueMatch =
-        !appliedFilters.chitValue ||
-        Number(item.chitValue) ===
-          Number(appliedFilters.chitValue);
-
-      return (
-        dateMatch &&
-        branchMatch &&
-        staffMatch &&
-        dueDayMatch &&
-        chitValueMatch
-      );
-    });
-  }, [data, appliedFilters]);
-
-  // =====================================================
-  // TOTAL CHIT VALUE
-  // =====================================================
-
-  const totalChitValue = useMemo(() => {
-    return filteredData.reduce((total, item) => {
-      const value = Number(item.chitValue);
-      return total + (Number.isNaN(value) ? 0 : value);
-    }, 0);
-  }, [filteredData]);
-
-  // =====================================================
-  // FORMAT CURRENCY
-  // =====================================================
-
-  const formatCurrency = (value) => {
-    const number = Number(value);
-
-    if (Number.isNaN(number)) {
-      return "₹0";
-    }
-
-    return `₹${number.toLocaleString("en-IN")}`;
-  };
-
-  // =====================================================
-  // REPORT PERIOD TEXT
-  // =====================================================
-
-  const reportPeriodText = useMemo(() => {
-    return `Date: ${getDateFilterLabel(
-      appliedFilters
-    )}`;
-  }, [appliedFilters]);
-
-  // =====================================================
-  // PRINT REPORT
-  // =====================================================
-
-  const handlePrint = () => {
-    if (filteredData.length === 0) {
-      alert(
-        "No records available to print."
-      );
-
-      return;
-    }
-
-    const printWindow = window.open(
-      "",
-      "_blank",
-      "width=1400,height=900"
-    );
-
-    if (!printWindow) {
-      alert(
-        "Please allow pop-ups to print the report."
-      );
-
-      return;
-    }
-
-    // Actual date when print button is clicked
-    const printDate =
-      new Date().toLocaleDateString(
-        "en-IN"
-      );
-
-    const dateFilterText =
-      getDateFilterLabel(
-        appliedFilters
-      );
-
-    const filterBranch =
-      appliedFilters.branch ||
-      "All Branches";
-
-    const filterStaff =
-      appliedFilters.staff ||
-      "All Staff";
-
-    const filterDueDay =
-      appliedFilters.dueDay ||
-      "All Due Days";
-
-    const filterChitValue =
-      appliedFilters.chitValue
-        ? formatCurrency(
-            appliedFilters.chitValue
-          )
-        : "All Chit Values";
-
-    const tableRows = filteredData
-      .map(
-        (item, index) => `
-          <tr>
-            <td>${index + 1}</td>
-
-            <td>
-              ${formatDate(
-                item.joinedDate
-              )}
-            </td>
-
-            <td>
-              ${item.branch || "-"}
-            </td>
-
-            <td>
-              ${item.staffName || "-"}
-            </td>
-
-            <td>
-              ${item.customerName || "-"}
-            </td>
-
-            <td>
-              ${formatCurrency(
-                item.chitValue
-              )}
-            </td>
-
-            <td>
-              ${item.keyLever || "-"}
-            </td>
-
-            <td>
-              ${item.followUp ?? "-"}
-            </td>
-
-            <td>
-              ${item.dueDay || "-"}
-            </td>
-
-            <td>
-              ${item.payMode || "-"}
-            </td>
-
-            <td>
-              ${
-                item.collectionType ||
-                "-"
-              }
-            </td>
-
-            <td>
-              ${item.remarks || "-"}
-            </td>
-          </tr>
-        `
-      )
-      .join("");
-
-    printWindow.document.write(`
-      <!DOCTYPE html>
-
-      <html>
-
-      <head>
-
-        <title>
-          SEYAL CHITS - New Chit Report
-        </title>
-
-        <style>
-
-          * {
-            box-sizing: border-box;
-          }
-
-          body {
-            font-family:
-              Arial,
-              Helvetica,
-              sans-serif;
-
-            margin: 0;
-            padding: 25px;
-
-            color: #222;
-
-            background: #fff;
-          }
-
-          .header {
-            text-align: center;
-
-            border-bottom:
-              2px solid #222;
-
-            padding-bottom: 14px;
-
-            margin-bottom: 18px;
-          }
-
-          .header h1 {
-            margin: 0;
-
-            font-size: 26px;
-          }
-
-          .header h2 {
-            margin: 6px 0 0;
-
-            font-size: 18px;
-          }
-
-          .print-date {
-            margin-top: 7px;
-
-            font-size: 12px;
-
-            color: #555;
-          }
-
-          .period {
-            text-align: center;
-
-            margin-bottom: 15px;
-
-            font-size: 15px;
-
-            font-weight: 700;
-          }
-
-          .summary {
-            display: grid;
-
-            grid-template-columns:
-              repeat(5, 1fr);
-
-            gap: 8px;
-
-            margin-bottom: 18px;
-          }
-
-          .summary-box {
-            border:
-              1px solid #ccc;
-
-            padding: 9px;
-
-            border-radius: 4px;
-
-            font-size: 11px;
-          }
-
-          .summary-box strong {
-            display: block;
-
-            margin-bottom: 4px;
-
-            color: #555;
-
-            font-size: 10px;
-          }
-
-          .joined-count {
-            margin-bottom: 12px;
-
-            padding: 10px;
-
-            border:
-              1px solid #bbb;
-
-            font-size: 14px;
-
-            font-weight: 700;
-          }
-
-          table {
-            width: 100%;
-
-            border-collapse:
-              collapse;
-
-            font-size: 10px;
-          }
-
-          th {
-            background: #f1f1f1;
-
-            font-weight: 700;
-          }
-
-          th,
-          td {
-            border:
-              1px solid #ccc;
-
-            padding: 7px;
-
-            text-align: left;
-
-            vertical-align: top;
-          }
-
-          tr {
-            page-break-inside:
-              avoid;
-          }
-
-          @media print {
-
-            body {
-              padding: 10px;
-            }
-
-          }
-
-        </style>
-
-      </head>
-
-      <body>
-
-        <div class="header">
-
-          <h1>
-            SEYAL CHITS
-          </h1>
-
-          <h2>
-            New Chit Report
-          </h2>
-
-          <div class="print-date">
-            Report Printed Date:
-            ${printDate}
-          </div>
-
-        </div>
-
-
-        <div class="period">
-          ${reportPeriodText}
-        </div>
-
-
-        <div class="summary">
-
-          <div class="summary-box">
-            <strong>DATE FILTER</strong>
-            ${dateFilterText}
-          </div>
-
-          <div class="summary-box">
-            <strong>BRANCH</strong>
-            ${filterBranch}
-          </div>
-
-          <div class="summary-box">
-            <strong>STAFF</strong>
-            ${filterStaff}
-          </div>
-
-          <div class="summary-box">
-            <strong>DUE DAY</strong>
-            ${filterDueDay}
-          </div>
-
-          <div class="summary-box">
-            <strong>CHIT VALUE</strong>
-            ${filterChitValue}
-          </div>
-
-        </div>
-
-
-        <div class="joined-count">
-
-          Total Joined:
-          ${filteredData.length}
-
-        </div>
-
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>S.No</th>
-
-              <th>Date</th>
-
-              <th>Branch</th>
-
-              <th>Staff Name</th>
-
-              <th>Customer Name</th>
-
-              <th>Chit Value</th>
-
-              <th>Key Lever</th>
-
-              <th>Follow-up</th>
-
-              <th>Due Day</th>
-
-              <th>Pay Mode</th>
-
-              <th>Collection Type</th>
-
-              <th>Remarks</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            ${tableRows}
-
-          </tbody>
-
-        </table>
-
-
-        <script>
-
-          window.onload = function () {
-            window.print();
-          };
-
-        </script>
-
-      </body>
-
-      </html>
-    `);
-
-    printWindow.document.close();
-  };
-
-  // =====================================================
-  // RETURN
-  // =====================================================
+  const navigate = useNavigate();
 
   return (
-    <div className="dashboard">
+    <div className="reports-home-page">
+
+      {/* =====================================================
+          SIDEBAR
+      ===================================================== */}
+
       <aside className="sidebar">
-        <div className="sidebar-logo-area">
-          <img src="/logo.jpg.jpg" alt="SEYAL CHITS" className="sidebar-logo" />
+
+        <div className="logo-area">
+          <img
+            src="/logo.jpg.jpg"
+            alt="SEYAL CHITS"
+            className="sidebar-logo"
+          />
         </div>
+
         <nav className="sidebar-menu">
-          <NavLink to="/dashboard" className={({ isActive }) => `menu-item ${isActive ? "active" : ""}`}><FaHome /><span>Dashboard</span></NavLink>
-          <NavLink to="/procedure" className={({ isActive }) => `menu-item ${isActive ? "active" : ""}`}><FaClipboardList /><span>New Chit</span></NavLink>
-          <NavLink to="/reports" className={({ isActive }) => `menu-item ${isActive ? "active" : ""}`}><FaChartBar /><span>Reports</span></NavLink>
+
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaHome />
+            <span>Dashboard</span>
+          </NavLink>
+
+          <NavLink
+            to="/new-chit"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaClipboardList />
+            <span>New Chit</span>
+          </NavLink>
+
+          <NavLink
+            to="/master"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaDatabase />
+            <span>Master</span>
+          </NavLink>
+
+          <NavLink
+            to="/payment-plan"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaListOl />
+            <span>Payment Plan</span>
+          </NavLink>
+
+          <NavLink
+            to="/payment"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaMoneyBillWave />
+            <span>Payment</span>
+          </NavLink>
+
+          <NavLink
+            to="/reports"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaChartBar />
+            <span>Reports</span>
+          </NavLink>
+
+          {/* ================= SETTINGS ================= */}
+
+          <NavLink
+            to="/settings"
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
+            <FaCog />
+            <span>Settings</span>
+          </NavLink>
+
         </nav>
+
         <div className="sidebar-footer">
           <strong>SEYAL CHITS</strong>
           <span>சேமிப்பே மாற்றம்!</span>
         </div>
+
       </aside>
+
+
+      {/* =====================================================
+          MAIN CONTENT
+      ===================================================== */}
+
       <main className="main-content">
-        <div className="reports-page">
 
-      {/* =================================================
-          HEADER
-      ================================================= */}
-
-      <div className="reports-header">
-
-        <div>
-
-          <h1>
-            Reports
-          </h1>
-
-          <p>
-            View and filter new chit records
-          </p>
-
-        </div>
-
-
-        <div className="reports-header-icon">
-
-          <FaChartBar />
-
-        </div>
-
-      </div>
-
-
-      {/* =================================================
-          FILTER CARD
-      ================================================= */}
-
-      <div
-        className="reports-filter-card"
-        style={{
-          borderRadius: "18px",
-          overflow: "hidden",
-          border: "1px solid #e3e8ee",
-          boxShadow: "0 10px 30px rgba(23, 50, 77, 0.08)",
-          background: "#ffffff",
-        }}
-      >
-
-        <div
-          className="filter-title"
-          style={{
-            padding: "22px 24px",
-            borderBottom: "1px solid #edf1f5",
-            background:
-              "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-          }}
-        >
-
-          <div
-            className="filter-title-icon"
-            style={{
-              width: "52px",
-              height: "52px",
-              borderRadius: "15px",
-              background:
-                "linear-gradient(135deg, #fff4cf 0%, #ffe8a3 100%)",
-              color: "#c88a00",
-              boxShadow: "0 6px 16px rgba(200, 138, 0, 0.12)",
-            }}
-          >
-
-            <FaSearch />
-
-          </div>
-
+        <div className="reports-header">
 
           <div>
-
-            <h2
-              style={{
-                marginBottom: "3px",
-                color: "#17324d",
-                fontWeight: "800",
-                letterSpacing: "-0.3px",
-              }}
-            >
-              Filter Reports
-            </h2>
-
-            <p
-              style={{
-                color: "#8290a0",
-                fontSize: "14px",
-              }}
-            >
-              Choose date period and other filters
-            </p>
-
+            <h1>Reports</h1>
+            <p>Select a report to view details</p>
           </div>
 
         </div>
 
 
-        <div className="filters-row">
+        {/* ===================================================
+            REPORT CARDS
+        =================================================== */}
 
-          {/* =================================================
-              DATE FILTER
-          ================================================= */}
+        <div className="report-list">
 
-          <div className="report-filter">
-
-            <label>
-
-              <FaCalendarAlt />
-
-              Date
-
-            </label>
-
-
-            <select
-              name="dateFilter"
-              value={
-                filters.dateFilter
-              }
-              onChange={
-                handleChange
-              }
-            >
-
-              <option value="all">
-                All Dates
-              </option>
-
-              <option value="today">
-                Today
-              </option>
-
-              <option value="thisMonth">
-                This Month
-              </option>
-
-              <option value="thisYear">
-                This Year
-              </option>
-
-              <option value="range">
-                Date Range
-              </option>
-
-            </select>
-
-          </div>
-
-
-          {/* =================================================
-              DATE RANGE
-          ================================================= */}
-
-          {filters.dateFilter ===
-            "range" && (
-
-            <>
-
-              <div className="report-filter">
-
-                <label>
-
-                  <FaCalendarAlt />
-
-                  From Date
-
-                </label>
-
-
-                <input
-                  type="date"
-                  name="dateFrom"
-                  value={
-                    filters.dateFrom
-                  }
-                  onChange={
-                    handleChange
-                  }
-                />
-
-              </div>
-
-
-              <div className="report-filter">
-
-                <label>
-
-                  <FaCalendarAlt />
-
-                  To Date
-
-                </label>
-
-
-                <input
-                  type="date"
-                  name="dateTo"
-                  value={
-                    filters.dateTo
-                  }
-                  onChange={
-                    handleChange
-                  }
-                />
-
-              </div>
-
-            </>
-
-          )}
-
-
-          {/* =================================================
-              BRANCH
-          ================================================= */}
-
-          <div className="report-filter">
-
-            <label>
-
-              <FaBuilding />
-
-              Branch
-
-            </label>
-
-
-            <select
-              name="branch"
-              value={
-                filters.branch
-              }
-              onChange={
-                handleChange
-              }
-            >
-
-              <option value="">
-                All Branches
-              </option>
-
-
-              {branchNames.map(
-                (branch) => (
-
-                  <option
-                    key={branch}
-                    value={branch}
-                  >
-                    {branch}
-                  </option>
-
-                )
-              )}
-
-            </select>
-
-          </div>
-
-
-          {/* =================================================
-              STAFF
-          ================================================= */}
-
-          <div className="report-filter">
-
-            <label>
-
-              <FaUser />
-
-              Staff Name
-
-            </label>
-
-
-            <select
-              name="staff"
-              value={
-                filters.staff
-              }
-              onChange={
-                handleChange
-              }
-            >
-
-              <option value="">
-                All Staff
-              </option>
-
-
-              {staffNames.map(
-                (staff) => (
-
-                  <option
-                    key={staff}
-                    value={staff}
-                  >
-                    {staff}
-                  </option>
-
-                )
-              )}
-
-            </select>
-
-          </div>
-
-
-          {/* =================================================
-              DUE DAY
-          ================================================= */}
-
-          <div className="report-filter">
-
-            <label>
-
-              <FaCalendarAlt />
-
-              Due Day
-
-            </label>
-
-
-            <select
-              name="dueDay"
-              value={
-                filters.dueDay
-              }
-              onChange={
-                handleChange
-              }
-            >
-
-              <option value="">
-                All Due Days
-              </option>
-
-
-              {Array.from(
-                {
-                  length: 31,
-                },
-                (_, index) => {
-
-                  const day =
-                    index + 1;
-
-                  return (
-                    <option
-                      key={day}
-                      value={day}
-                    >
-                      {day}
-                    </option>
-                  );
-
-                }
-              )}
-
-            </select>
-
-          </div>
-
-
-          {/* =================================================
-              CHIT VALUE
-          ================================================= */}
-
-          <div className="report-filter">
-
-            <label>
-
-              <FaMoneyBillWave />
-
-              Chit Value
-
-            </label>
-
-
-            <select
-              name="chitValue"
-              value={
-                filters.chitValue
-              }
-              onChange={
-                handleChange
-              }
-            >
-
-              <option value="">
-                All Chit Values
-              </option>
-
-
-              {chitValues.map(
-                (value) => (
-
-                  <option
-                    key={value}
-                    value={value}
-                  >
-                    {formatCurrency(
-                      value
-                    )}
-                  </option>
-
-                )
-              )}
-
-            </select>
-
-          </div>
-
-
-          {/* =================================================
-              BUTTONS
-          ================================================= */}
-
-          <div
-            className="filter-buttons"
-            style={{
-              gap: "10px",
-              alignItems: "stretch",
-            }}
-          >
-
-            <button
-              type="button"
-              className="filter-btn"
-              onClick={
-                applyFilters
-              }
-              style={{
-                minHeight: "46px",
-                borderRadius: "12px",
-                fontWeight: "800",
-                boxShadow: "0 6px 14px rgba(23, 50, 77, 0.12)",
-              }}
-            >
-
-              <FaSearch />
-
-              Filter
-
-            </button>
-
-
-            <button
-              type="button"
-              className="clear-filter-btn"
-              onClick={
-                clearFilters
-              }
-              style={{
-                minHeight: "46px",
-                borderRadius: "12px",
-                fontWeight: "700",
-              }}
-            >
-
-              <FaTimes />
-
-              Clear
-
-            </button>
-
-
-            <button
-              type="button"
-              className="filter-btn"
-              onClick={
-                handlePrint
-              }
-              style={{
-                minHeight: "46px",
-                borderRadius: "12px",
-                fontWeight: "800",
-                boxShadow: "0 6px 14px rgba(23, 50, 77, 0.12)",
-              }}
-            >
-
-              <FaPrint />
-
-              Print
-
-            </button>
-
+          {reportCards.map((report) => (
             <div
-              style={{
-                minHeight: "46px",
-                minWidth: "235px",
-                padding: "8px 16px",
-                borderRadius: "13px",
-                background:
-                  "linear-gradient(135deg, #17324d 0%, #244a68 100%)",
-                border: "1px solid #17324d",
-                boxShadow: "0 8px 20px rgba(23, 50, 77, 0.16)",
-                color: "#ffffff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: "14px",
-                whiteSpace: "nowrap",
-              }}
+              className="report-card"
+              key={report.id}
+              onClick={() => navigate(report.path)}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "9px",
-                }}
-              >
-                <span
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    borderRadius: "9px",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background: "rgba(255, 255, 255, 0.12)",
-                    color: "#ffd66b",
-                  }}
-                >
-                  <FaMoneyBillWave />
-                </span>
 
-                <span
-                  style={{
-                    fontSize: "12px",
-                    fontWeight: "700",
-                    color: "#cbd8e4",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.7px",
-                  }}
-                >
-                   Chit Value
-                </span>
+              <div className="report-icon">
+                {report.icon}
               </div>
 
-              <strong
-                style={{
-                  fontSize: "18px",
-                  fontWeight: "900",
-                  color: "#ffd66b",
-                  letterSpacing: "0.2px",
-                }}
-              >
-                {formatCurrency(totalChitValue)}
-              </strong>
+              <div className="report-content">
+
+                <div className="report-number">
+                  Report {report.id}
+                </div>
+
+                <h2>{report.title}</h2>
+
+                <p>{report.description}</p>
+
+              </div>
+
+              <div className="report-arrow">
+                →
+              </div>
+
             </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      {/* =================================================
-          REPORT TABLE
-      ================================================= */}
-
-      <div className="reports-table-card">
-
-        <div className="table-header">
-
-          <div>
-
-            <h2>
-              New Chit Records
-            </h2>
-
-            <p>
-              {reportPeriodText}
-            </p>
-
-          </div>
-
-
-          <div className="record-count">
-
-            {filteredData.length}
-
-            {" "}
-
-            {filteredData.length === 1
-              ? "Record"
-              : "Records"}
-
-          </div>
+          ))}
 
         </div>
 
-
-        <div className="table-wrapper">
-
-          <table>
-
-            <thead>
-
-              <tr>
-
-                <th>
-                  S.No
-                </th>
-
-                <th>
-                  Date
-                </th>
-
-                <th>
-                  Branch
-                </th>
-
-                <th>
-                  Staff Name
-                </th>
-
-                <th>
-                  Customer Name
-                </th>
-
-                <th>
-                  Chit Value
-                </th>
-
-                <th>
-                  Key Lever
-                </th>
-
-                <th>
-                  Follow-up
-                </th>
-
-                <th>
-                  Due Day
-                </th>
-
-                <th>
-                  Pay Mode
-                </th>
-
-                <th>
-                  Collection Type
-                </th>
-
-                <th>
-                  Remarks
-                </th>
-
-              </tr>
-
-            </thead>
-
-
-            <tbody>
-
-              {loading ? (
-
-                <tr>
-
-                  <td
-                    colSpan="12"
-                    style={{
-                      textAlign:
-                        "center",
-                      padding:
-                        "30px",
-                    }}
-                  >
-
-                    Loading new chits...
-
-                  </td>
-
-                </tr>
-
-              ) : filteredData.length ===
-                0 ? (
-
-                <tr>
-
-                  <td colSpan="12">
-
-                    <div className="no-data">
-
-                      <div className="no-data-icon">
-
-                        <FaClipboardList />
-
-                      </div>
-
-
-                      <h3>
-                        No Records Found
-                      </h3>
-
-
-                      <p>
-                        No new chit entries
-                        match the selected
-                        filters.
-                      </p>
-
-                    </div>
-
-                  </td>
-
-                </tr>
-
-              ) : (
-
-                filteredData.map(
-                  (item, index) => (
-
-                    <tr
-                      key={
-                        item.id ||
-                        index
-                      }
-                    >
-
-                      <td>
-                        {index + 1}
-                      </td>
-
-
-                      <td>
-                        {formatDate(
-                          item.joinedDate
-                        )}
-                      </td>
-
-
-                      <td>
-                        {item.branch ||
-                          "-"}
-                      </td>
-
-
-                      <td>
-                        {item.staffName ||
-                          "-"}
-                      </td>
-
-
-                      <td>
-                        {item.customerName ||
-                          "-"}
-                      </td>
-
-
-                      <td>
-                        {formatCurrency(
-                          item.chitValue
-                        )}
-                      </td>
-
-
-                      <td>
-                        {item.keyLever ||
-                          "-"}
-                      </td>
-
-
-                      <td>
-                        {item.followUp ??
-                          "-"}
-                      </td>
-
-
-                      <td>
-                        {item.dueDay ||
-                          "-"}
-                      </td>
-
-
-                      <td>
-                        {item.payMode ||
-                          "-"}
-                      </td>
-
-
-                      <td>
-                        {item.collectionType ||
-                          "-"}
-                      </td>
-
-
-                      <td>
-                        {item.remarks ||
-                          "-"}
-                      </td>
-
-                    </tr>
-
-                  )
-                )
-
-              )}
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-        </div>
       </main>
+
     </div>
   );
 }

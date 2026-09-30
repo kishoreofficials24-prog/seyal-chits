@@ -1,0 +1,1354 @@
+/* =====================================================
+   SEYAL CHITS - CHIT MASTER
+   ===================================================== */
+
+.chit-master-page {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.chit-master-page .sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  width: 250px;
+  height: 100vh;
+
+  background: #182d3b;
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 1000;
+
+  box-sizing: border-box;
+}
+
+
+/* =====================================================
+   SIDEBAR LOGO
+===================================================== */
+
+.chit-master-page .sidebar-logo-area {
+  height: 125px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+}
+
+.chit-master-page .sidebar-logo {
+  width: 78px;
+  height: 78px;
+
+  object-fit: contain;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  padding: 4px;
+
+  box-sizing: border-box;
+}
+
+
+/* =====================================================
+   SIDEBAR MENU
+===================================================== */
+
+.chit-master-page .sidebar-menu {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 15px;
+}
+
+.chit-master-page .menu-item {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  min-height: 48px;
+
+  padding: 0 15px;
+
+  border-radius: 8px;
+
+  color: #d7e0e5;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: all 0.2s ease;
+
+  box-sizing: border-box;
+}
+
+.chit-master-page .menu-item svg {
+  font-size: 17px;
+
+  flex-shrink: 0;
+}
+
+.chit-master-page .menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  color: #ffffff;
+}
+
+.chit-master-page .menu-item.active {
+  background: #d8a927;
+
+  color: #182d3b;
+
+  box-shadow:
+    0 4px 12px rgba(216, 169, 39, 0.2);
+}
+
+
+/* =====================================================
+   SIDEBAR FOOTER
+===================================================== */
+
+.chit-master-page .sidebar-footer {
+  margin-top: auto;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chit-master-page .sidebar-footer strong {
+  color: #ffffff;
+
+  font-size: 14px;
+
+  letter-spacing: 0.5px;
+}
+
+.chit-master-page .sidebar-footer span {
+  color: #d8a927;
+
+  font-size: 11px;
+}
+
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+.chit-master-page .main-content {
+  margin-left: 250px;
+
+  min-height: 100vh;
+
+  padding: 35px 40px;
+
+  box-sizing: border-box;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+.chit-master-page .page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 30px;
+}
+
+.chit-master-page .page-header h1 {
+  margin: 0;
+
+  color: #182d3b;
+
+  font-size: 30px;
+
+  font-weight: 750;
+}
+
+.chit-master-page .page-header p {
+  margin: 7px 0 0;
+
+  color: #71808a;
+
+  font-size: 14px;
+}
+
+.chit-master-page .page-header-icon {
+  width: 55px;
+  height: 55px;
+
+  border-radius: 12px;
+
+  background: #182d3b;
+
+  color: #d8a927;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.chit-master-page .master-error {
+  background: #fff1f1;
+
+  color: #c62828;
+
+  border: 1px solid #ffcaca;
+
+  border-radius: 8px;
+
+  padding: 12px 15px;
+
+  margin-bottom: 20px;
+
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   MASTER SECTION
+===================================================== */
+
+.chit-master-page .master-section,
+.chit-master-page .schedule-section {
+  background: #ffffff;
+
+  border-radius: 14px;
+
+  border: 1px solid #e5eaee;
+
+  box-shadow:
+    0 4px 18px rgba(24, 45, 59, 0.05);
+
+  padding: 25px;
+
+  margin-bottom: 25px;
+}
+
+.chit-master-page .section-title {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+}
+
+.chit-master-page .section-title h2 {
+  margin: 0;
+
+  color: #182d3b;
+
+  font-size: 20px;
+}
+
+.chit-master-page .section-title p {
+  margin: 6px 0 0;
+
+  color: #7a8790;
+
+  font-size: 13px;
+}
+
+.chit-master-page .master-count {
+  min-width: 75px;
+
+  height: 55px;
+
+  padding: 0 12px;
+
+  border-radius: 10px;
+
+  background: #f7f2df;
+
+  color: #b38816;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  font-size: 20px;
+
+  font-weight: 750;
+}
+
+.chit-master-page .master-count span {
+  font-size: 11px;
+
+  font-weight: 600;
+
+  color: #8d7741;
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.chit-master-page .master-search {
+  width: 100%;
+
+  height: 45px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  border: 1px solid #dce3e8;
+
+  border-radius: 8px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  margin-bottom: 22px;
+
+  background: #ffffff;
+}
+
+.chit-master-page .master-search svg {
+  color: #83919a;
+
+  font-size: 14px;
+}
+
+.chit-master-page .master-search input {
+  width: 100%;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  color: #182d3b;
+
+  font-size: 13px;
+}
+
+.chit-master-page .master-search input::placeholder {
+  color: #9ca7ad;
+}
+
+
+/* =====================================================
+   MASTER GRID
+===================================================== */
+
+.chit-master-page .master-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(220px, 1fr)
+    );
+
+  gap: 15px;
+}
+
+.chit-master-page .master-card {
+  position: relative;
+
+  border: 1px solid #e0e6ea;
+
+  background: #ffffff;
+
+  border-radius: 12px;
+
+  padding: 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  min-height: 95px;
+}
+
+.chit-master-page .master-card:hover {
+  border-color: #d8a927;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 6px 18px rgba(24, 45, 59, 0.08);
+}
+
+.chit-master-page .master-card.selected {
+  border-color: #d8a927;
+
+  background: #fffaf0;
+
+  box-shadow:
+    0 5px 16px rgba(216, 169, 39, 0.12);
+}
+
+.chit-master-page .master-card-icon {
+  width: 43px;
+  height: 43px;
+
+  flex-shrink: 0;
+
+  border-radius: 10px;
+
+  background: #182d3b;
+
+  color: #d8a927;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.chit-master-page .master-card-content {
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+.chit-master-page .master-card-content span {
+  color: #839099;
+
+  font-size: 11px;
+
+  margin-bottom: 3px;
+}
+
+.chit-master-page .master-card-content strong {
+  color: #182d3b;
+
+  font-size: 18px;
+
+  white-space: nowrap;
+}
+
+.chit-master-page .master-card-content small {
+  margin-top: 4px;
+
+  color: #a17d18;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+.chit-master-page .master-card-view {
+  margin-left: auto;
+
+  color: #9aa5ab;
+}
+
+
+/* =====================================================
+   SCHEDULE HEADER
+===================================================== */
+
+.chit-master-page .schedule-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 22px;
+}
+
+.chit-master-page
+.schedule-header
+> div:first-child
+span {
+  color: #7c8991;
+
+  font-size: 12px;
+}
+
+.chit-master-page .schedule-header h2 {
+  margin: 5px 0 0;
+
+  color: #182d3b;
+
+  font-size: 25px;
+}
+
+.chit-master-page .schedule-summary {
+  display: flex;
+
+  gap: 30px;
+}
+
+.chit-master-page .schedule-summary > div {
+  min-width: 90px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.chit-master-page .schedule-summary span {
+  color: #7c8991;
+
+  font-size: 11px;
+}
+
+.chit-master-page .schedule-summary strong {
+  color: #182d3b;
+
+  font-size: 17px;
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.chit-master-page .schedule-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.chit-master-page .schedule-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 500px;
+}
+
+.chit-master-page .schedule-table th {
+  background: #f4f6f8;
+
+  color: #687781;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-align: left;
+
+  padding: 13px 15px;
+
+  border-bottom: 1px solid #e2e7ea;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.3px;
+}
+
+.chit-master-page .schedule-table td {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid #edf0f2;
+
+  color: #334650;
+
+  font-size: 13px;
+}
+
+.chit-master-page .schedule-table tbody tr:hover {
+  background: #fafbfc;
+}
+
+.chit-master-page .month-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border-radius: 6px;
+
+  background: #eef3f6;
+
+  color: #182d3b;
+
+  font-size: 12px;
+
+  font-weight: 650;
+}
+
+.chit-master-page .amount-cell {
+  color: #182d3b !important;
+
+  font-weight: 750;
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.chit-master-page .master-empty,
+.chit-master-page .schedule-empty {
+  min-height: 170px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  color: #84919a;
+}
+
+.chit-master-page .master-empty svg,
+.chit-master-page .schedule-empty svg {
+  font-size: 28px;
+
+  color: #c4ccd1;
+
+  margin-bottom: 10px;
+}
+
+.chit-master-page .master-empty h3,
+.chit-master-page .schedule-empty h3 {
+  margin: 0;
+
+  color: #52616a;
+
+  font-size: 15px;
+}
+
+.chit-master-page .master-empty p,
+.chit-master-page .schedule-empty p {
+  margin: 6px 0 0;
+
+  font-size: 12px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .chit-master-page .sidebar {
+    width: 220px;
+  }
+
+  .chit-master-page .main-content {
+    margin-left: 220px;
+
+    padding: 25px;
+  }
+
+  .chit-master-page .master-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+}
+
+
+@media (max-width: 650px) {
+
+  .chit-master-page .sidebar {
+    position: relative;
+
+    width: 100%;
+
+    height: auto;
+  }
+
+  .chit-master-page .sidebar-menu {
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+  }
+
+  .chit-master-page .main-content {
+    margin-left: 0;
+
+    padding: 20px;
+  }
+
+  .chit-master-page .page-header {
+    align-items: flex-start;
+  }
+
+  .chit-master-page .master-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chit-master-page .schedule-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 18px;
+  }
+
+  .chit-master-page .schedule-summary {
+    width: 100%;
+  }
+}
+/* =====================================================
+   NEW CHIT - MATCH CHIT MASTER UI
+   ===================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+/* ================= PAGE ================= */
+
+.dashboard {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+/* ================= SIDEBAR ================= */
+
+.dashboard .sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  width: 250px;
+  height: 100vh;
+
+  background: #182d3b;
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 1000;
+}
+
+/* ================= LOGO ================= */
+
+.dashboard .sidebar-logo-area {
+  height: 125px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-sizing: border-box;
+}
+
+.dashboard .sidebar-logo {
+  width: 78px;
+  height: 78px;
+
+  object-fit: contain;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  padding: 4px;
+
+  box-sizing: border-box;
+}
+
+/* ================= SIDEBAR MENU ================= */
+
+.dashboard .sidebar-menu {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 15px;
+}
+
+.dashboard .menu-item {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  min-height: 48px;
+
+  padding: 0 15px;
+
+  border-radius: 8px;
+
+  color: #d7e0e5;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition: all 0.2s ease;
+}
+
+.dashboard .menu-item svg {
+  font-size: 17px;
+
+  flex-shrink: 0;
+}
+
+.dashboard .menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  color: #ffffff;
+}
+
+.dashboard .menu-item.active {
+  background: #d8a927;
+
+  color: #182d3b;
+
+  box-shadow:
+    0 4px 12px rgba(216, 169, 39, 0.2);
+}
+
+/* ================= SIDEBAR FOOTER ================= */
+
+.dashboard .sidebar-footer {
+  margin-top: auto;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dashboard .sidebar-footer strong {
+  color: #ffffff;
+
+  font-size: 14px;
+
+  letter-spacing: 0.5px;
+}
+
+.dashboard .sidebar-footer span {
+  color: #d8a927;
+
+  font-size: 11px;
+}
+
+/* ================= MAIN CONTENT ================= */
+
+.dashboard .main-content {
+  margin-left: 250px;
+
+  min-height: 100vh;
+
+  padding: 35px 40px;
+
+  box-sizing: border-box;
+}
+
+/* =====================================================
+   NEW CHIT PAGE
+===================================================== */
+
+.procedure-page {
+  width: 100%;
+}
+
+/* ================= HEADER ================= */
+
+.procedure-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 30px;
+}
+
+.procedure-header h1 {
+  margin: 0;
+
+  color: #182d3b;
+
+  font-size: 30px;
+
+  font-weight: 750;
+}
+
+.procedure-header p {
+  margin: 7px 0 0;
+
+  color: #71808a;
+
+  font-size: 14px;
+}
+
+.procedure-title-icon {
+  width: 55px;
+  height: 55px;
+
+  border-radius: 12px;
+
+  background: #182d3b;
+
+  color: #d8a927;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+}
+
+/* ================= FORM CARD ================= */
+
+.procedure-card {
+  width: 100%;
+
+  background: #ffffff;
+
+  border-radius: 14px;
+
+  border: 1px solid #e5eaee;
+
+  box-shadow:
+    0 4px 18px rgba(24, 45, 59, 0.05);
+
+  overflow: hidden;
+
+  margin-bottom: 25px;
+}
+
+/* ================= CARD HEADING ================= */
+
+.card-heading {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 25px 30px;
+
+  border-top: 4px solid #d8a927;
+
+  border-bottom: 1px solid #edf0f2;
+}
+
+.heading-icon {
+  width: 55px;
+  height: 55px;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  background: #fff4d8;
+
+  color: #d8a927;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+}
+
+.card-heading h2 {
+  margin: 0;
+
+  color: #182d3b;
+
+  font-size: 22px;
+
+  font-weight: 750;
+}
+
+.card-heading p {
+  margin: 6px 0 0;
+
+  color: #8a969e;
+
+  font-size: 13px;
+}
+
+/* ================= FORM ================= */
+
+.procedure-card form {
+  padding: 30px;
+}
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 24px 26px;
+
+  margin-bottom: 25px;
+}
+
+.form-group {
+  min-width: 0;
+}
+
+.form-group label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 9px;
+
+  color: #304653;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+.form-group label svg {
+  color: #d8a927;
+
+  font-size: 14px;
+}
+
+/* ================= INPUTS ================= */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+
+  border: 1px solid #d9e1e6;
+
+  background: #ffffff;
+
+  color: #182d3b;
+
+  border-radius: 9px;
+
+  outline: none;
+
+  font-size: 13px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  box-sizing: border-box;
+}
+
+.form-group input,
+.form-group select {
+  height: 59px;
+
+  padding: 0 17px;
+}
+
+.form-group textarea {
+  min-height: 110px;
+
+  padding: 14px 17px;
+
+  resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #9aa7af;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #d8a927;
+
+  box-shadow:
+    0 0 0 3px rgba(216, 169, 39, 0.10);
+}
+
+/* ================= BUTTON AREA ================= */
+
+.form-actions {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  padding-top: 5px;
+
+  border-top: 1px solid #edf0f2;
+
+  margin-top: 10px;
+
+  padding-top: 22px;
+}
+
+.form-actions button {
+  min-width: 125px;
+
+  height: 45px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  padding: 0 20px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.form-actions button[type="submit"] {
+  background: #d8a927;
+
+  color: #182d3b;
+}
+
+.form-actions button[type="submit"]:hover {
+  background: #c79a20;
+
+  transform: translateY(-1px);
+}
+
+.form-actions button[type="button"] {
+  background: #eef2f4;
+
+  color: #52636d;
+}
+
+.form-actions button[type="button"]:hover {
+  background: #e2e7ea;
+}
+
+/* ================= ERROR ================= */
+
+.procedure-error {
+  background: #fff1f1;
+
+  color: #c62828;
+
+  border: 1px solid #ffcaca;
+
+  border-radius: 8px;
+
+  padding: 12px 15px;
+
+  margin-bottom: 20px;
+
+  font-size: 13px;
+}
+
+/* ================= TABLE / RECORD SECTION ================= */
+
+.procedure-table-card {
+  background: #ffffff;
+
+  border-radius: 14px;
+
+  border: 1px solid #e5eaee;
+
+  box-shadow:
+    0 4px 18px rgba(24, 45, 59, 0.05);
+
+  padding: 25px;
+
+  margin-bottom: 25px;
+}
+
+.procedure-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.procedure-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 1000px;
+}
+
+.procedure-table th {
+  background: #f4f6f8;
+
+  color: #687781;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-align: left;
+
+  padding: 13px 15px;
+
+  border-bottom: 1px solid #e2e7ea;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.3px;
+}
+
+.procedure-table td {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid #edf0f2;
+
+  color: #334650;
+
+  font-size: 13px;
+}
+
+.procedure-table tbody tr:hover {
+  background: #fafbfc;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1100px) {
+
+  .dashboard .main-content {
+    padding: 30px;
+  }
+
+  .form-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+}
+
+@media (max-width: 900px) {
+
+  .dashboard .sidebar {
+    width: 220px;
+  }
+
+  .dashboard .main-content {
+    margin-left: 220px;
+
+    padding: 25px;
+  }
+}
+
+@media (max-width: 650px) {
+
+  .dashboard .sidebar {
+    position: relative;
+
+    width: 100%;
+
+    height: auto;
+  }
+
+  .dashboard .sidebar-menu {
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+  }
+
+  .dashboard .main-content {
+    margin-left: 0;
+
+    padding: 20px;
+  }
+
+  .procedure-header {
+    align-items: flex-start;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-heading {
+    padding: 20px;
+  }
+
+  .procedure-card form {
+    padding: 20px;
+  }
+}

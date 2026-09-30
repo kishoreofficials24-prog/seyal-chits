@@ -1,0 +1,1112 @@
+/* =========================================================
+   PAYMENT PLAN - EXACT CHIT MASTER UI
+   ========================================================= */
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
+
+.payment-plan-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: block;
+  position: relative;
+  background: #f5f7fa;
+  color: #182d3b;
+}
+
+/* =========================================================
+   SIDEBAR
+   EXACT CHIT MASTER VALUES
+   ========================================================= */
+
+.payment-plan-wrapper .sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  height: 100vh;
+  min-height: 100vh;
+
+  background: #182d3b;
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 1000;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   SIDEBAR LOGO
+   ========================================================= */
+
+.payment-plan-wrapper .sidebar-logo-area {
+  height: 125px;
+  min-height: 125px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-sizing: border-box;
+}
+
+.payment-plan-wrapper .sidebar-logo {
+  width: 78px;
+  height: 78px;
+
+  object-fit: contain;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  padding: 4px;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   SIDEBAR MENU
+   ========================================================= */
+
+.payment-plan-wrapper .sidebar-menu {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 15px;
+}
+
+.payment-plan-wrapper .menu-item {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  min-height: 48px;
+  height: 48px;
+
+  padding: 0 15px;
+
+  border-radius: 8px;
+
+  color: #d7e0e5;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: all 0.2s ease;
+
+  box-sizing: border-box;
+}
+
+.payment-plan-wrapper .menu-item svg {
+  font-size: 17px;
+
+  flex-shrink: 0;
+}
+
+.payment-plan-wrapper .menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  color: #ffffff;
+}
+
+.payment-plan-wrapper .menu-item.active {
+  background: #d8a927;
+
+  color: #182d3b;
+
+  box-shadow:
+    0 4px 12px rgba(216, 169, 39, 0.2);
+}
+
+/* =========================================================
+   SIDEBAR FOOTER
+   ========================================================= */
+
+.payment-plan-wrapper .sidebar-footer {
+  margin-top: auto;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.payment-plan-wrapper .sidebar-footer strong {
+  color: #ffffff;
+
+  font-size: 14px;
+
+  letter-spacing: 0.5px;
+}
+
+.payment-plan-wrapper .sidebar-footer span {
+  color: #d8a927;
+
+  font-size: 11px;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   EXACT CHIT MASTER:
+   margin-left 250px
+   padding 35px 40px
+   ========================================================= */
+
+.payment-plan-wrapper .payment-plan-content {
+  width: calc(100% - 250px);
+
+  min-height: 100vh;
+
+  margin-left: 250px;
+
+  padding: 35px 40px;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.payment-plan-header {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 30px;
+}
+
+.page-label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #182d3b;
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+.payment-plan-header h1 {
+  margin: 0;
+
+  color: #182d3b;
+
+  font-size: 30px;
+
+  font-weight: 750;
+}
+
+.payment-plan-header p {
+  margin: 7px 0 0;
+
+  color: #71808a;
+
+  font-size: 14px;
+}
+
+/* =========================================================
+   DATE BOX
+   ========================================================= */
+
+.header-date {
+  min-width: 125px;
+
+  padding: 11px 16px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #e3e7ea;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 4px 15px rgba(24, 45, 59, 0.04);
+
+  color: #182d3b;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.payment-plan-alert {
+  margin-bottom: 20px;
+
+  padding: 12px 15px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+}
+
+.payment-plan-alert.error {
+  background: #fff1f1;
+
+  color: #c62828;
+
+  border: 1px solid #ffcaca;
+}
+
+/* =========================================================
+   PAYMENT PLAN FORM CARD
+   ========================================================= */
+
+.plan-form-card {
+  position: relative;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  border-radius: 14px;
+
+  border: 1px solid #e5eaee;
+
+  box-shadow:
+    0 4px 18px rgba(24, 45, 59, 0.05);
+
+  overflow: hidden;
+
+  margin-bottom: 25px;
+}
+
+/* GOLD TOP BORDER */
+
+.plan-form-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 4px;
+
+  background: #d8a927;
+
+  z-index: 2;
+}
+
+/* =========================================================
+   FORM CARD HEADER
+   ========================================================= */
+
+.form-card-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 25px 30px !important;
+
+  min-height: 92px;
+
+  border-bottom: 1px solid #edf0f2;
+}
+
+.form-card-header h2 {
+  margin: 0;
+
+  color: #182d3b;
+
+  font-size: 22px;
+
+  font-weight: 750;
+}
+
+.form-card-header p {
+  margin: 6px 0 0;
+
+  color: #8a969e;
+
+  font-size: 13px;
+}
+
+/* =========================================================
+   FORM HEADER ICON
+   ========================================================= */
+
+.form-header-icon {
+  width: 55px !important;
+  height: 55px !important;
+
+  min-width: 55px !important;
+
+  flex-shrink: 0;
+
+  border-radius: 12px !important;
+
+  background: #fff4d8 !important;
+
+  color: #d8a927 !important;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 22px !important;
+
+  margin-left: auto;
+
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.payment-plan-form {
+  padding: 30px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 24px 26px;
+
+  margin-bottom: 0;
+}
+
+/* =========================================================
+   FORM FIELD
+   ========================================================= */
+
+.form-field {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+.form-field label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 9px;
+
+  color: #304653;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+/* =========================================================
+   INPUT / SELECT / TEXTAREA
+   ========================================================= */
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+
+  border: 1px solid #d9e1e6;
+
+  background: #ffffff;
+
+  color: #182d3b;
+
+  border-radius: 9px;
+
+  outline: none;
+
+  font-size: 13px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  box-sizing: border-box;
+}
+
+.form-field input,
+.form-field select {
+  height: 59px;
+
+  padding: 0 17px;
+}
+
+.form-field textarea {
+  min-height: 110px;
+
+  padding: 14px 17px;
+
+  resize: vertical;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: #9aa7af;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: #d8a927;
+
+  box-shadow:
+    0 0 0 3px rgba(216, 169, 39, 0.1);
+}
+
+.form-field input:hover,
+.form-field select:hover,
+.form-field textarea:hover {
+  border-color: #cbd5da;
+}
+
+.form-field select {
+  cursor: pointer;
+}
+
+.form-field input[readonly] {
+  background: #f7f8f9;
+
+  color: #7c8991;
+
+  cursor: default;
+}
+
+/* =========================================================
+   REMARKS - FULL WIDTH
+   ========================================================= */
+
+.form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.form-actions {
+  grid-column: 1 / -1;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  padding-top: 22px;
+
+  border-top: 1px solid #edf0f2;
+
+  margin-top: 10px;
+}
+
+.cancel-button,
+.save-plan-button {
+  min-width: 125px;
+
+  height: 45px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  padding: 0 20px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  transition: all 0.2s ease;
+}
+
+/* CANCEL */
+
+.cancel-button {
+  background: #eef2f4;
+
+  color: #52636d;
+}
+
+.cancel-button:hover {
+  background: #e2e7ea;
+}
+
+/* SAVE */
+
+.save-plan-button {
+  background: #d8a927;
+
+  color: #182d3b;
+}
+
+.save-plan-button:hover {
+  background: #c79a20;
+
+  transform: translateY(-1px);
+}
+
+.save-plan-button:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+/* =========================================================
+   PAYMENT PLANS TABLE CARD
+   ========================================================= */
+
+.plans-table-card {
+  width: 100%;
+
+  background: #ffffff;
+
+  border-radius: 14px;
+
+  border: 1px solid #e5eaee;
+
+  box-shadow:
+    0 4px 18px rgba(24, 45, 59, 0.05);
+
+  padding: 25px;
+
+  margin-bottom: 25px;
+}
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.table-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 20px;
+}
+
+.table-header h2 {
+  margin: 0;
+
+  color: #182d3b;
+
+  font-size: 20px;
+
+  font-weight: 700;
+}
+
+.table-header p {
+  margin: 6px 0 0;
+
+  color: #7a8790;
+
+  font-size: 13px;
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.search-box {
+  width: 280px;
+
+  height: 45px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  border: 1px solid #dce3e8;
+
+  border-radius: 8px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+}
+
+.search-box svg {
+  color: #83919a;
+
+  font-size: 14px;
+
+  flex-shrink: 0;
+}
+
+.search-box input {
+  width: 100%;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  color: #182d3b;
+
+  font-size: 13px;
+}
+
+.search-box input::placeholder {
+  color: #9ca7ad;
+}
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.table-scroll {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.plans-table {
+  width: 100%;
+
+  min-width: 1200px;
+
+  border-collapse: collapse;
+}
+
+.plans-table th {
+  background: #f4f6f8;
+
+  color: #687781;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-align: left;
+
+  padding: 13px 15px;
+
+  border-bottom: 1px solid #e2e7ea;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.3px;
+
+  white-space: nowrap;
+}
+
+.plans-table td {
+  padding: 14px 15px;
+
+  border-bottom: 1px solid #edf0f2;
+
+  color: #334650;
+
+  font-size: 13px;
+
+  white-space: nowrap;
+}
+
+.plans-table tbody tr:hover {
+  background: #fafbfc;
+}
+
+.plans-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================================================
+   TABLE SPECIAL CELLS
+   ========================================================= */
+
+.serial-number {
+  color: #687781 !important;
+
+  font-weight: 600;
+}
+
+.customer-name {
+  color: #182d3b !important;
+
+  font-weight: 700;
+}
+
+.amount-cell,
+.payment-amount-cell {
+  color: #182d3b !important;
+
+  font-weight: 750;
+}
+
+.remarks-cell {
+  max-width: 220px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   ORDER BUTTONS
+   ========================================================= */
+
+.order-controls {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+}
+
+.drag-icon {
+  width: 30px;
+
+  height: 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid #dce3e8;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #71808a;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.drag-icon:hover {
+  border-color: #d8a927;
+
+  color: #b38816;
+
+  background: #fffaf0;
+}
+
+.drag-icon:disabled {
+  opacity: 0.35;
+
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.action-buttons {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+}
+
+.edit-button,
+.delete-button {
+  width: 32px;
+
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.edit-button {
+  border: 1px solid #dce3e8;
+
+  background: #ffffff;
+
+  color: #71808a;
+}
+
+.edit-button:hover {
+  border-color: #d8a927;
+
+  color: #b38816;
+
+  background: #fffaf0;
+}
+
+.delete-button {
+  border: 1px solid #ead0d0;
+
+  background: #ffffff;
+
+  color: #bd5b5b;
+}
+
+.delete-button:hover {
+  border-color: #d98b8b;
+
+  background: #fff4f4;
+
+  color: #a73f3f;
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-plan-state {
+  min-height: 190px;
+
+  padding: 35px 20px !important;
+
+  text-align: center !important;
+
+  color: #84919a !important;
+
+  white-space: normal !important;
+}
+
+.empty-plan-icon {
+  width: 48px;
+
+  height: 48px;
+
+  margin: 0 auto 10px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #fff4d8;
+
+  color: #d8a927;
+
+  font-size: 20px;
+}
+
+.empty-plan-state h3 {
+  margin: 0;
+
+  color: #52616a;
+
+  font-size: 15px;
+}
+
+.empty-plan-state p {
+  margin: 6px 0 0;
+
+  color: #84919a;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .payment-plan-wrapper .payment-plan-content {
+    padding: 30px;
+  }
+
+  .payment-plan-form {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+}
+
+@media (max-width: 900px) {
+
+  .payment-plan-wrapper .sidebar {
+    width: 220px;
+  }
+
+  .payment-plan-wrapper .payment-plan-content {
+    width: calc(100% - 220px);
+
+    margin-left: 220px;
+
+    padding: 25px;
+  }
+}
+
+@media (max-width: 650px) {
+
+  .payment-plan-wrapper .sidebar {
+    position: relative;
+
+    width: 100%;
+
+    height: auto;
+
+    min-height: auto;
+  }
+
+  .payment-plan-wrapper .sidebar-menu {
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+  }
+
+  .payment-plan-wrapper .sidebar-footer {
+    display: none;
+  }
+
+  .payment-plan-wrapper .payment-plan-content {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 20px;
+  }
+
+  .payment-plan-header {
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .payment-plan-form {
+    grid-template-columns: 1fr;
+
+    padding: 20px;
+  }
+
+  .form-field.full-width,
+  .form-actions {
+    grid-column: 1;
+  }
+
+  .form-card-header {
+    padding: 20px !important;
+  }
+
+  .plans-table-card {
+    padding: 20px;
+  }
+
+  .table-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 450px) {
+
+  .payment-plan-wrapper .payment-plan-content {
+    padding: 15px;
+  }
+
+  .payment-plan-header {
+    flex-direction: column;
+  }
+
+  .header-date {
+    align-self: flex-start;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    align-items: stretch;
+  }
+
+  .cancel-button,
+  .save-plan-button {
+    width: 100%;
+  }
+}

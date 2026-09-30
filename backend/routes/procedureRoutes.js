@@ -4,12 +4,50 @@ const pool = require("../db");
 const router = express.Router();
 
 // =====================================================
+// ENSURE PROCEDURES TABLE EXISTS
+// =====================================================
+
+async function ensureProceduresTable() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS procedures (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+
+      joined_date DATE NOT NULL,
+
+      branch VARCHAR(150) NOT NULL,
+
+      staff_name VARCHAR(150) NOT NULL,
+
+      customer_name VARCHAR(150) NOT NULL,
+
+      chit_value VARCHAR(100) NOT NULL,
+
+      key_lever VARCHAR(150) NOT NULL,
+
+      follow_up INT NOT NULL,
+
+      due_day VARCHAR(100) NOT NULL,
+
+      pay_mode VARCHAR(100) NOT NULL,
+
+      collection_type VARCHAR(100) NOT NULL,
+
+      remarks TEXT,
+
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+}
+
+// =====================================================
 // SAVE PROCEDURE
 // POST /api/procedures
 // =====================================================
 
 router.post("/", async (req, res) => {
   try {
+    await ensureProceduresTable();
+
     const {
       joinedDate,
       branch,
@@ -89,11 +127,15 @@ router.post("/", async (req, res) => {
       id: result.insertId,
     });
   } catch (error) {
-    console.error("Procedure Save Error:", error);
+    console.error(
+      "Procedure Save Error:",
+      error
+    );
 
     res.status(500).json({
       success: false,
       message: "Failed to save procedure",
+      error: error.message,
     });
   }
 });
@@ -105,6 +147,8 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
+    await ensureProceduresTable();
+
     const [rows] = await pool.query(
       `
       SELECT
@@ -131,11 +175,15 @@ router.get("/", async (req, res) => {
       data: rows,
     });
   } catch (error) {
-    console.error("Procedure Fetch Error:", error);
+    console.error(
+      "Procedure Fetch Error:",
+      error
+    );
 
     res.status(500).json({
       success: false,
       message: "Failed to fetch procedures",
+      error: error.message,
     });
   }
 });
@@ -147,6 +195,8 @@ router.get("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
+    await ensureProceduresTable();
+
     const { id } = req.params;
 
     const {
@@ -236,11 +286,15 @@ router.put("/:id", async (req, res) => {
       message: "Procedure updated successfully",
     });
   } catch (error) {
-    console.error("Procedure Update Error:", error);
+    console.error(
+      "Procedure Update Error:",
+      error
+    );
 
     res.status(500).json({
       success: false,
       message: "Failed to update procedure",
+      error: error.message,
     });
   }
 });
@@ -252,6 +306,8 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
+    await ensureProceduresTable();
+
     const { id } = req.params;
 
     const [result] = await pool.query(
@@ -275,13 +331,21 @@ router.delete("/:id", async (req, res) => {
       message: "Procedure deleted successfully",
     });
   } catch (error) {
-    console.error("Procedure Delete Error:", error);
+    console.error(
+      "Procedure Delete Error:",
+      error
+    );
 
     res.status(500).json({
       success: false,
       message: "Failed to delete procedure",
+      error: error.message,
     });
   }
 });
+
+// =====================================================
+// EXPORT
+// =====================================================
 
 module.exports = router;
