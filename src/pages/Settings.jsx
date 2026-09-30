@@ -6,7 +6,6 @@ import {
   FaUsers,
   FaBuilding,
   FaMoneyBillWave,
-  FaPlus,
   FaEdit,
   FaTrash,
   FaSyncAlt,

@@ -8,7 +8,6 @@ import {
   FaListOl,
   FaMoneyBillWave,
   FaChartBar,
-  FaSearch,
   FaPrint,
   FaFileExcel,
   FaArrowLeft,
@@ -37,20 +36,6 @@ const formatDate = (value) => {
   }
 
   return d.toLocaleDateString("en-GB");
-};
-
-const normalizeDate = (value) => {
-  if (!value) return null;
-
-  const d = new Date(value);
-
-  if (Number.isNaN(d.getTime())) {
-    return null;
-  }
-
-  d.setHours(0, 0, 0, 0);
-
-  return d;
 };
 
 function PaymentPlanReport() {

@@ -413,7 +413,7 @@ function PaymentReport() {
       <aside className="sidebar">
         <div className="logo-area">
           <img
-            src="-logo.jpg.jpg"
+            src="/logo.jpg.jpg"
             alt="SEYAL CHITS"
             className="sidebar-logo"
           />

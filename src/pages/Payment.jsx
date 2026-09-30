@@ -155,62 +155,6 @@ function Payment() {
   };
 
   /* =====================================================
-     LOAD PAYMENT AMOUNT
-     ===================================================== */
-
-  const loadPaymentAmount = async (
-    paymentPlanId,
-    paymentDate
-  ) => {
-    if (!paymentPlanId) {
-      setForm((prev) => ({
-        ...prev,
-        amount: "",
-      }));
-
-      return;
-    }
-
-    try {
-      const response = await axios.get(
-        `${API_URL}/payment-plans/${paymentPlanId}/payment-info`,
-        {
-          params: {
-            paymentDate:
-              paymentDate || "",
-          },
-        }
-      );
-
-      const result = response.data;
-
-      const data =
-        result?.data || result;
-
-      setForm((prev) => ({
-        ...prev,
-
-        amount:
-          data?.paymentAmount ??
-          data?.payment_amount ??
-          data?.first_payment_amount ??
-          data?.planned_amount ??
-          "",
-      }));
-    } catch (error) {
-      console.error(
-        "Payment Amount Error:",
-        error
-      );
-
-      setForm((prev) => ({
-        ...prev,
-        amount: "",
-      }));
-    }
-  };
-
-  /* =====================================================
      INITIAL LOAD
      ===================================================== */
 

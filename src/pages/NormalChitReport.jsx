@@ -354,6 +354,10 @@ function NormalChitReport() {
     dateFilter,
     customFrom,
     customTo,
+    dateMatches,
+    staffMatches,
+    branchMatches,
+    searchMatches,
   ]);
 
   /*
