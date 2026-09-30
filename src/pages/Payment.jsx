@@ -635,7 +635,7 @@ function Payment() {
           </strong>
 
           <span>
-            ■■■■■■■■ ■■■■■■■!
+            சேமிப்பே மாற்றம்!
           </span>
 
         </div>

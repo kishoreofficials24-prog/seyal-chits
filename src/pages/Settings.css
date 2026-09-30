@@ -138,6 +138,10 @@
    SIDEBAR FOOTER
    ========================================================= */
 
+/* =========================================================
+   SIDEBAR FOOTER
+   ========================================================= */
+
 .settings-page .settings-sidebar-footer {
   margin-top: auto;
 
@@ -149,12 +153,16 @@
   gap: 4px;
 
   color: #ffffff;
+
+  text-align: center;
 }
 
 .settings-page .settings-sidebar-footer strong {
   font-size: 15px;
 
   letter-spacing: 0.5px;
+
+  color: #f7f4ed;
 }
 
 .settings-page .settings-sidebar-footer span {
@@ -162,8 +170,6 @@
 
   color: #d8a927;
 }
-
-
 /* =========================================================
    MAIN CONTENT
    ========================================================= */

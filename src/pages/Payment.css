@@ -148,29 +148,21 @@ body,
 
 .payment-wrapper .sidebar-footer {
   margin-top: auto;
-
   padding: 20px;
-
   display: flex;
   flex-direction: column;
-
   gap: 4px;
-
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
 .payment-wrapper .sidebar-footer strong {
-  color: #ffffff;
-
-  font-size: 14px;
-
+  font-size: 15px;
   letter-spacing: 0.5px;
 }
 
 .payment-wrapper .sidebar-footer span {
-  color: #d8a927;
-
   font-size: 11px;
+  color: #d8a927;
 }
 
 /* =========================================================

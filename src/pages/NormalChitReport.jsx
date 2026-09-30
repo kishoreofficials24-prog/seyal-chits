@@ -969,7 +969,7 @@ function NormalChitReport() {
           </strong>
 
           <span>
-                            !
+             சேமிப்பே மாற்றம்!
 
 
 

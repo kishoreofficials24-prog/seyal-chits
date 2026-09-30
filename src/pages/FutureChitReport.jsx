@@ -513,7 +513,7 @@ function FutureChitReport() {
 
         <div className="sidebar-footer">
           <strong>SEYAL CHITS</strong>
-          <span>■■■■■■■■ ■■■■■■■!</span>
+          <span> சேமிப்பே மாற்றம்!</span>
         </div>
 
       </aside>
