@@ -9,7 +9,6 @@ import {
   FaListOl,
   FaMoneyBillWave,
   FaChartBar,
-  FaSearch,
   FaPrint,
   FaFileExcel,
   FaArrowLeft,
@@ -106,19 +105,41 @@ function CombinedReport() {
     load();
   }, []);
 
-  const uniqueOptions = (key) =>
-    [...new Set(
-      data
-        .map((row) => row[key])
-        .filter((v) => v !== undefined && v !== null && String(v).trim() !== "")
-        .map((v) => String(v).trim())
-    )].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  const nameOptions = useMemo(
+    () =>
+      [...new Set(
+        data
+          .map((row) => row.name)
+          .filter(
+            (v) =>
+              v !== undefined &&
+              v !== null &&
+              String(v).trim() !== ""
+          )
+          .map((v) => String(v).trim())
+      )].sort((a, b) =>
+        a.localeCompare(b, undefined, { numeric: true })
+      ),
+    [data]
+  );
 
-  const nameOptions = useMemo(() => uniqueOptions("name"), [data]);
-  const staffOptions = useMemo(() => uniqueOptions("staff_name"), [data]);
-  const villageOptions = useMemo(() => uniqueOptions("village"), [data]);
-
-
+  const staffOptions = useMemo(
+    () =>
+      [...new Set(
+        data
+          .map((row) => row.staff_name)
+          .filter(
+            (v) =>
+              v !== undefined &&
+              v !== null &&
+              String(v).trim() !== ""
+          )
+          .map((v) => String(v).trim())
+      )].sort((a, b) =>
+        a.localeCompare(b, undefined, { numeric: true })
+      ),
+    [data]
+  );
 
   const chitValueOptions = useMemo(
     () => [...new Set(data.map((row) => Number(row.chit_value)).filter((v) => Number.isFinite(v) && v > 0))]

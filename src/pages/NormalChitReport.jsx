@@ -337,28 +337,14 @@ function NormalChitReport() {
     =========================================================
   */
 
-  const filteredData = useMemo(() => {
-    return data.filter((row) => {
-      return (
-        dateMatches(row) &&
-        staffMatches(row) &&
-        branchMatches(row) &&
-        searchMatches(row)
-      );
-    });
-  }, [
-    data,
-    search,
-    staffFilter,
-    branchFilter,
-    dateFilter,
-    customFrom,
-    customTo,
-    dateMatches,
-    staffMatches,
-    branchMatches,
-    searchMatches,
-  ]);
+  const filteredData = data.filter((row) => {
+    return (
+      dateMatches(row) &&
+      staffMatches(row) &&
+      branchMatches(row) &&
+      searchMatches(row)
+    );
+  });
 
   /*
     =========================================================

@@ -53,51 +53,6 @@ const normalize = (v) => {
   return d;
 };
 
-const getRequiredDate = (
-  startDate,
-  requiredMonth
-) => {
-  if (!startDate || !requiredMonth) {
-    return null;
-  }
-
-  const start = new Date(startDate);
-
-  if (Number.isNaN(start.getTime())) {
-    return null;
-  }
-
-  const originalDay = start.getDate();
-
-  const result = new Date(
-
-
-
-    start.getFullYear(),
-    start.getMonth() +
-      Number(requiredMonth) -
-      1,
-    1
-  );
-
-  const lastDay = new Date(
-    result.getFullYear(),
-    result.getMonth() + 1,
-    0
-  ).getDate();
-
-  result.setDate(
-    Math.min(
-      originalDay,
-      lastDay
-    )
-  );
-
-  result.setHours(0, 0, 0, 0);
-
-  return result;
-};
-
 function FutureChitReport() {
   const navigate = useNavigate();
 
